@@ -1,0 +1,7 @@
+interface:
+  display_name: "Anomaly MVP Back"
+  short_description: "Backend and data harness for anomaly MVP."
+  default_prompt: "Use $anomaly-mvp-back to implement schema, APIs, and review logic for the MVP."
+
+policy:
+  allow_implicit_invocation: true

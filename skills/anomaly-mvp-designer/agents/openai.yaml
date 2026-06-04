@@ -1,0 +1,7 @@
+interface:
+  display_name: "Anomaly MVP Designer"
+  short_description: "UX and visual direction for anomaly MVP."
+  default_prompt: "Use $anomaly-mvp-designer to design flows, states, and the visual system from the PRD."
+
+policy:
+  allow_implicit_invocation: true

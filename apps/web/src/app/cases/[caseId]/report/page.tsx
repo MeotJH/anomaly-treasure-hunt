@@ -1,0 +1,40 @@
+import { getCaseDetailView } from "@/modules/cases/application/get-case-detail-view";
+import { ReportForm } from "@/modules/reports/presentation/components/report-form";
+
+export const dynamic = "force-dynamic";
+
+export default async function ReportPage({
+  params,
+}: {
+  params: Promise<{ caseId: string }>;
+}) {
+  const { caseId } = await params;
+  const caseDetail = await getCaseDetailView(caseId);
+
+  return (
+    <div className="grid gap-6 lg:grid-cols-[1.2fr_0.8fr]">
+      <ReportForm caseId={caseId} />
+      <aside className="space-y-6 rounded-[2rem] border border-white/10 bg-white/5 p-8">
+        <div>
+          <p className="text-xs uppercase tracking-[0.28em] text-zinc-500">{caseDetail.fileNo}</p>
+          <h2 className="mt-3 text-2xl font-semibold text-zinc-50">{caseDetail.title}</h2>
+        </div>
+        <div>
+          <h3 className="text-sm font-semibold uppercase tracking-[0.24em] text-zinc-400">
+            촬영 조건
+          </h3>
+          <p className="mt-3 text-sm leading-7 text-zinc-300">
+            {caseDetail.mission.photoRequirement}
+          </p>
+        </div>
+        <div>
+          <h3 className="text-sm font-semibold uppercase tracking-[0.24em] text-zinc-400">
+            안전 안내
+          </h3>
+          <p className="mt-3 text-sm leading-7 text-zinc-300">{caseDetail.safetyNotice}</p>
+        </div>
+      </aside>
+    </div>
+  );
+}
+

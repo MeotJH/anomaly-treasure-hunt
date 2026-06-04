@@ -1,0 +1,7 @@
+interface:
+  display_name: "Anomaly MVP PO"
+  short_description: "Scope and backlog owner for anomaly MVP."
+  default_prompt: "Use $anomaly-mvp-po to turn the PRD into MVP scope, backlog, and acceptance criteria."
+
+policy:
+  allow_implicit_invocation: true

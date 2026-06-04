@@ -1,0 +1,7 @@
+interface:
+  display_name: "Anomaly MVP Front"
+  short_description: "Frontend delivery harness for anomaly MVP."
+  default_prompt: "Use $anomaly-mvp-front to build pages, components, and UX states for the MVP."
+
+policy:
+  allow_implicit_invocation: true

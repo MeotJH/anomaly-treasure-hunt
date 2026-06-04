@@ -1,0 +1,7 @@
+interface:
+  display_name: "Anomaly MVP DevOps"
+  short_description: "Deployment and ops readiness for anomaly MVP."
+  default_prompt: "Use $anomaly-mvp-devops to define env, deployment, storage, and ops setup for the MVP."
+
+policy:
+  allow_implicit_invocation: true

@@ -1,0 +1,7 @@
+interface:
+  display_name: "Anomaly MVP QA"
+  short_description: "Test and release checks for anomaly MVP."
+  default_prompt: "Use $anomaly-mvp-qa to derive tests, review risks, and assess release readiness."
+
+policy:
+  allow_implicit_invocation: true
