@@ -1,4 +1,42 @@
-import { IsDateString, IsIn, IsNotEmpty, IsString } from "class-validator";
+import { Type } from "class-transformer";
+import {
+  ArrayMinSize,
+  IsArray,
+  IsDateString,
+  IsIn,
+  IsNotEmpty,
+  IsNumber,
+  IsString,
+  ValidateNested,
+} from "class-validator";
+
+class AdminCaseClueDto {
+  @Type(() => Number)
+  @IsNumber()
+  order!: number;
+
+  @IsString()
+  @IsNotEmpty()
+  title!: string;
+
+  @IsString()
+  @IsNotEmpty()
+  content!: string;
+}
+
+class AdminMissionDto {
+  @IsString()
+  @IsNotEmpty()
+  instruction!: string;
+
+  @IsString()
+  @IsNotEmpty()
+  photoRequirement!: string;
+
+  @IsString()
+  @IsNotEmpty()
+  caution!: string;
+}
 
 export class CreateAdminCaseDto {
   @IsString()
@@ -52,5 +90,14 @@ export class CreateAdminCaseDto {
   @IsString()
   @IsNotEmpty()
   completionMessage!: string;
-}
 
+  @IsArray()
+  @ArrayMinSize(1)
+  @ValidateNested({ each: true })
+  @Type(() => AdminCaseClueDto)
+  clues!: AdminCaseClueDto[];
+
+  @ValidateNested()
+  @Type(() => AdminMissionDto)
+  mission!: AdminMissionDto;
+}

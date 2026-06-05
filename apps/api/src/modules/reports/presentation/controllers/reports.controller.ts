@@ -1,4 +1,4 @@
-import { Body, Controller, Get, Param, Post, Req } from "@nestjs/common";
+import { Body, Controller, Get, Inject, Param, Post, Req } from "@nestjs/common";
 import { Request } from "express";
 import { GetCaseResultUseCase } from "../../application/use-cases/get-case-result.use-case";
 import { ListMyReportsUseCase } from "../../application/use-cases/list-my-reports.use-case";
@@ -9,8 +9,11 @@ import { SubmitReportDto } from "./submit-report.dto";
 @Controller("api")
 export class ReportsController {
   constructor(
+    @Inject(SubmitInvestigationReportUseCase)
     private readonly submitInvestigationReportUseCase: SubmitInvestigationReportUseCase,
+    @Inject(ListMyReportsUseCase)
     private readonly listMyReportsUseCase: ListMyReportsUseCase,
+    @Inject(GetCaseResultUseCase)
     private readonly getCaseResultUseCase: GetCaseResultUseCase,
   ) {}
 

@@ -21,7 +21,7 @@ export function ReportForm({ caseId }: { caseId: string }) {
       : "";
 
     if (!photoUrl) {
-      setMessage("Select an evidence image before submitting.");
+      setMessage("현장 증거 이미지를 먼저 선택해 주세요.");
       return;
     }
 
@@ -35,12 +35,12 @@ export function ReportForm({ caseId }: { caseId: string }) {
         photoUrl,
       });
       setMessage(
-        `${result.message} Code match: ${result.isCodeCorrect ? "matched" : "not matched"}`,
+        `${result.message} 식별 코드 일치 여부: ${result.isCodeCorrect ? "일치" : "불일치"}`,
       );
       setResultHref(`/cases/${caseId}/result`);
     } catch (error) {
       setMessage(
-        error instanceof Error ? error.message : "An unexpected error occurred while submitting.",
+        error instanceof Error ? error.message : "제보 전송 중 예상하지 못한 오류가 발생했습니다.",
       );
     } finally {
       setIsSubmitting(false);
@@ -50,49 +50,53 @@ export function ReportForm({ caseId }: { caseId: string }) {
   return (
     <form
       onSubmit={handleSubmit}
-      className="rounded-[2rem] border border-white/10 bg-white/5 p-8 shadow-2xl shadow-black/20"
+      className="rounded-[2rem] border border-rose-950/40 bg-[linear-gradient(180deg,rgba(24,11,14,0.94),rgba(10,11,15,0.92))] p-8 shadow-2xl shadow-black/30"
     >
       <div className="space-y-6">
         <div>
-          <p className="text-xs uppercase tracking-[0.28em] text-zinc-500">Evidence Upload</p>
-          <h2 className="mt-3 text-3xl font-semibold text-zinc-50">Submit Field Evidence</h2>
+          <p className="text-xs uppercase tracking-[0.28em] text-zinc-500">현장 증거 제출</p>
+          <h2 className="mt-3 text-3xl font-semibold text-zinc-50">
+            <span className="glitch-text" data-text="이상 징후 제보서 작성">
+              이상 징후 제보서 작성
+            </span>
+          </h2>
           <p className="mt-3 max-w-2xl text-sm leading-7 text-zinc-300">
-            This MVP scaffold submits a local evidence path derived from the selected file
-            name. When storage is introduced later, the infrastructure layer can be swapped
-            without changing the screen flow.
+            현장에서 확인한 식별 코드와 촬영 증거를 함께 제출합니다. 지금은 파일명을
+            기준으로 로컬 경로를 만들고 있으며, 이후 실제 저장소로 교체해도 화면 흐름은
+            유지됩니다.
           </p>
         </div>
 
         <label className="block">
-          <span className="mb-2 block text-sm font-medium text-zinc-200">Identification code</span>
+          <span className="mb-2 block text-sm font-medium text-zinc-200">식별 코드</span>
           <input
             value={code}
             onChange={(event) => setCode(event.target.value)}
-            className="w-full rounded-2xl border border-white/10 bg-black/20 px-4 py-3 text-zinc-50 outline-none placeholder:text-zinc-500 focus:border-emerald-400/40"
-            placeholder="GREEN-LUNG-001"
+            className="w-full rounded-2xl border border-white/10 bg-black/20 px-4 py-3 text-zinc-50 outline-none placeholder:text-zinc-500 focus:border-rose-400/40"
+            placeholder="현장에서 확인한 코드 입력"
           />
         </label>
 
         <label className="block">
-          <span className="mb-2 block text-sm font-medium text-zinc-200">Evidence image</span>
+          <span className="mb-2 block text-sm font-medium text-zinc-200">증거 이미지</span>
           <input
             type="file"
             name="evidence"
             accept="image/*"
             onChange={(event) => setSelectedFileName(event.target.files?.[0]?.name ?? "")}
-            className="block w-full rounded-2xl border border-dashed border-white/15 bg-black/20 px-4 py-4 text-sm text-zinc-300 file:mr-4 file:rounded-full file:border-0 file:bg-emerald-400/15 file:px-4 file:py-2 file:text-emerald-100"
+            className="block w-full rounded-2xl border border-dashed border-white/15 bg-black/20 px-4 py-4 text-sm text-zinc-300 file:mr-4 file:rounded-full file:border-0 file:bg-rose-500/15 file:px-4 file:py-2 file:text-rose-100"
           />
           {selectedFileName ? (
-            <p className="mt-2 text-xs text-zinc-500">Selected file: {selectedFileName}</p>
+            <p className="mt-2 text-xs text-zinc-500">선택한 파일: {selectedFileName}</p>
           ) : null}
         </label>
 
         <button
           type="submit"
           disabled={isSubmitting}
-          className="inline-flex rounded-full border border-emerald-400/30 bg-emerald-400/10 px-5 py-3 text-sm font-medium text-emerald-50 disabled:cursor-not-allowed disabled:opacity-50"
+          className="distressed-button distressed-button-danger px-5 py-3 text-sm font-medium"
         >
-          {isSubmitting ? "Submitting..." : "Submit report"}
+          {isSubmitting ? "제보 전송 중..." : "제보 전송"}
         </button>
 
         {message ? (
@@ -104,9 +108,9 @@ export function ReportForm({ caseId }: { caseId: string }) {
         {resultHref ? (
           <Link
             href={resultHref}
-            className="inline-flex rounded-full border border-sky-400/30 bg-sky-400/10 px-4 py-2 text-sm text-sky-100"
+            className="distressed-button distressed-button-info px-4 py-2 text-sm"
           >
-            View result screen
+            발표 구역 보기
           </Link>
         ) : null}
       </div>

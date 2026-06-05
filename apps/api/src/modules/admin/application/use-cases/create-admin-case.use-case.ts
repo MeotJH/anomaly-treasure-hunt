@@ -21,6 +21,8 @@ export interface CreateAdminCaseCommand {
   answerLocation: string;
   identificationCode: string;
   completionMessage: string;
+  clues: InvestigationCaseProps["clues"];
+  mission: InvestigationCaseProps["mission"];
 }
 
 @Injectable()
@@ -49,16 +51,11 @@ export class CreateAdminCaseUseCase {
       answerLocation: command.answerLocation,
       identificationCode: command.identificationCode,
       completionMessage: command.completionMessage,
-      clues: [],
-      mission: {
-        instruction: "Add mission instruction from admin editor.",
-        photoRequirement: "Add photo requirement from admin editor.",
-        caution: "Add caution note from admin editor.",
-      },
+      clues: command.clues,
+      mission: command.mission,
     });
 
     await this.caseRepository.create(caseItem);
     return caseItem;
   }
 }
-

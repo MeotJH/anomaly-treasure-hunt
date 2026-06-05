@@ -1,4 +1,36 @@
-import { IsDateString, IsIn, IsOptional, IsString } from "class-validator";
+import { Type } from "class-transformer";
+import {
+  IsArray,
+  IsDateString,
+  IsIn,
+  IsNumber,
+  IsOptional,
+  IsString,
+  ValidateNested,
+} from "class-validator";
+
+class AdminCaseClueDto {
+  @Type(() => Number)
+  @IsNumber()
+  order!: number;
+
+  @IsString()
+  title!: string;
+
+  @IsString()
+  content!: string;
+}
+
+class AdminMissionDto {
+  @IsString()
+  instruction!: string;
+
+  @IsString()
+  photoRequirement!: string;
+
+  @IsString()
+  caution!: string;
+}
 
 export class UpdateAdminCaseDto {
   @IsOptional()
@@ -52,5 +84,15 @@ export class UpdateAdminCaseDto {
   @IsOptional()
   @IsString()
   completionMessage?: string;
-}
 
+  @IsOptional()
+  @IsArray()
+  @ValidateNested({ each: true })
+  @Type(() => AdminCaseClueDto)
+  clues?: AdminCaseClueDto[];
+
+  @IsOptional()
+  @ValidateNested()
+  @Type(() => AdminMissionDto)
+  mission?: AdminMissionDto;
+}

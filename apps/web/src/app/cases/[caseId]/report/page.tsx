@@ -14,14 +14,14 @@ export default async function ReportPage({
   return (
     <div className="grid gap-6 lg:grid-cols-[1.2fr_0.8fr]">
       <ReportForm caseId={caseId} />
-      <aside className="space-y-6 rounded-[2rem] border border-white/10 bg-white/5 p-8">
+      <aside className="space-y-6 rounded-[2rem] border border-rose-950/40 bg-[linear-gradient(180deg,rgba(24,11,14,0.94),rgba(10,11,15,0.92))] p-8">
         <div>
           <p className="text-xs uppercase tracking-[0.28em] text-zinc-500">{caseDetail.fileNo}</p>
           <h2 className="mt-3 text-2xl font-semibold text-zinc-50">{caseDetail.title}</h2>
         </div>
         <div>
           <h3 className="text-sm font-semibold uppercase tracking-[0.24em] text-zinc-400">
-            촬영 조건
+            증거 촬영 조건
           </h3>
           <p className="mt-3 text-sm leading-7 text-zinc-300">
             {caseDetail.mission.photoRequirement}
@@ -29,7 +29,7 @@ export default async function ReportPage({
         </div>
         <div>
           <h3 className="text-sm font-semibold uppercase tracking-[0.24em] text-zinc-400">
-            안전 안내
+            안전 수칙
           </h3>
           <p className="mt-3 text-sm leading-7 text-zinc-300">{caseDetail.safetyNotice}</p>
         </div>
@@ -37,4 +37,3 @@ export default async function ReportPage({
     </div>
   );
 }
-

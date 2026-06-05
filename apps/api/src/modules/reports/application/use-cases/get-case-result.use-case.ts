@@ -17,7 +17,7 @@ export class GetCaseResultUseCase {
     const caseItem = await this.caseRepository.findById(caseId);
 
     if (!caseItem) {
-      throw new NotFoundException(`Case ${caseId} was not found.`);
+      throw new NotFoundException(`사건 문서 ${caseId}를 찾을 수 없습니다.`);
     }
 
     const winner = await this.reportRepository.getWinnerByCaseId(caseId);
@@ -25,6 +25,8 @@ export class GetCaseResultUseCase {
     return {
       caseId,
       fileNo: caseItem.fileNo,
+      title: caseItem.title,
+      completionMessage: caseItem.completionMessage,
       winner:
         winner === null
           ? null
@@ -37,4 +39,3 @@ export class GetCaseResultUseCase {
     };
   }
 }
-

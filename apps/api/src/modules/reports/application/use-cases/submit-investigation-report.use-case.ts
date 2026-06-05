@@ -28,6 +28,7 @@ export class SubmitInvestigationReportUseCase {
     private readonly caseRepository: CaseRepository,
     @Inject(INVESTIGATION_REPORT_REPOSITORY)
     private readonly reportRepository: InvestigationReportRepository,
+    @Inject(IdentificationCodeService)
     private readonly identificationCodeService: IdentificationCodeService,
   ) {}
 
@@ -36,11 +37,11 @@ export class SubmitInvestigationReportUseCase {
     const caseItem = await this.caseRepository.findById(command.caseId);
 
     if (!caseItem) {
-      throw new NotFoundException(`Case ${command.caseId} was not found.`);
+      throw new NotFoundException(`사건 문서 ${command.caseId}를 찾을 수 없습니다.`);
     }
 
     if (!caseItem.isReportOpen(now)) {
-      throw new BadRequestException("This case is not accepting reports.");
+      throw new BadRequestException("이 사건은 현재 제보를 받고 있지 않습니다.");
     }
 
     const approvedReport = await this.reportRepository.findApprovedByCaseAndUser(
@@ -49,7 +50,7 @@ export class SubmitInvestigationReportUseCase {
     );
 
     if (approvedReport) {
-      throw new ConflictException("An approved report already exists for this case.");
+      throw new ConflictException("이미 승인된 제보가 있어 추가 제출할 수 없습니다.");
     }
 
     const submissionCount = await this.reportRepository.countByCaseAndUser(
@@ -59,7 +60,7 @@ export class SubmitInvestigationReportUseCase {
 
     if (submissionCount >= 5) {
       throw new HttpException(
-        "Submission limit reached for this case.",
+        "이 사건에 대한 제보 가능 횟수를 모두 사용했습니다.",
         HttpStatus.TOO_MANY_REQUESTS,
       );
     }
@@ -87,8 +88,7 @@ export class SubmitInvestigationReportUseCase {
     return {
       isCodeCorrect,
       reviewStatus: report.reviewStatus,
-      message:
-        "보고가 접수되었습니다. 검토 후 추첨 대상 등록 여부가 확정됩니다.",
+      message: "제보가 접수되었습니다. 검토가 끝나면 기록 상태가 갱신됩니다.",
     };
   }
 }

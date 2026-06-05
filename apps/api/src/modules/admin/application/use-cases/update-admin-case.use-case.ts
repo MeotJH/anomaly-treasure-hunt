@@ -17,6 +17,8 @@ export type UpdateAdminCaseCommand = Partial<{
   answerLocation: string;
   identificationCode: string;
   completionMessage: string;
+  clues: InvestigationCaseProps["clues"];
+  mission: InvestigationCaseProps["mission"];
 }>;
 
 @Injectable()
@@ -30,7 +32,7 @@ export class UpdateAdminCaseUseCase {
     const caseItem = await this.caseRepository.findById(caseId);
 
     if (!caseItem) {
-      throw new NotFoundException(`Case ${caseId} was not found.`);
+      throw new NotFoundException(`사건 문서 ${caseId}를 찾을 수 없습니다.`);
     }
 
     return this.caseRepository.update(caseId, {
@@ -47,7 +49,8 @@ export class UpdateAdminCaseUseCase {
       ...("answerLocation" in command ? { answerLocation: command.answerLocation } : {}),
       ...("identificationCode" in command ? { identificationCode: command.identificationCode } : {}),
       ...("completionMessage" in command ? { completionMessage: command.completionMessage } : {}),
+      ...("clues" in command ? { clues: command.clues } : {}),
+      ...("mission" in command ? { mission: command.mission } : {}),
     });
   }
 }
-

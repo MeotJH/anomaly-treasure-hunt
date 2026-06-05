@@ -35,7 +35,9 @@ export interface CaseDetail extends CaseSummary {
 export interface CaseResult {
   caseId: string;
   fileNo: string;
+  title: string;
   resultOpen: boolean;
+  completionMessage: string;
   winner: {
     id: string;
     userId: string;
@@ -49,4 +51,6 @@ export interface AdminCaseRecord extends CaseSummary {
   answerLocation: string;
   identificationCode: string;
   completionMessage: string;
+  clues: CaseClue[];
+  mission: MissionInstruction;
 }

@@ -1,8 +1,8 @@
 @import "tailwindcss";
 
 :root {
-  --background: #05070c;
-  --foreground: #f4f4f5;
+  --background: #040507;
+  --foreground: #f5f5f5;
 }
 
 @theme inline {
@@ -21,7 +21,10 @@ html {
 }
 
 body {
-  background: var(--background);
+  min-height: 100vh;
+  background:
+    radial-gradient(circle at top, rgba(125, 21, 21, 0.22), transparent 28%),
+    linear-gradient(180deg, #07080c 0%, #030406 100%);
   color: var(--foreground);
   font-family: var(--font-geist-sans), sans-serif;
 }
@@ -33,4 +36,298 @@ a {
 
 button {
   cursor: pointer;
+}
+
+::selection {
+  background: rgba(244, 63, 94, 0.35);
+  color: #fff1f2;
+}
+
+.haunted-panel {
+  position: relative;
+  overflow: hidden;
+}
+
+.haunted-panel::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  background:
+    linear-gradient(180deg, transparent 0%, rgba(255, 255, 255, 0.03) 48%, transparent 100%),
+    repeating-linear-gradient(
+      180deg,
+      rgba(255, 255, 255, 0.015) 0,
+      rgba(255, 255, 255, 0.015) 1px,
+      transparent 1px,
+      transparent 3px
+    );
+  opacity: 0.3;
+  mix-blend-mode: screen;
+}
+
+.haunted-panel::after {
+  content: "";
+  position: absolute;
+  inset: -20%;
+  pointer-events: none;
+  background: radial-gradient(circle, rgba(244, 63, 94, 0.12) 0%, transparent 60%);
+  opacity: 0.35;
+  animation: pulse-glow 7s ease-in-out infinite;
+}
+
+.glitch-text {
+  position: relative;
+  display: inline-block;
+  animation: glitch-base 4.8s step-end infinite;
+}
+
+.glitch-text::before,
+.glitch-text::after {
+  content: attr(data-text);
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+}
+
+.glitch-text::before {
+  color: rgba(255, 100, 100, 0.8);
+  text-shadow: 1px 0 0 rgba(255, 100, 100, 0.45);
+  transform: translateX(0);
+  clip-path: inset(0 0 0 0);
+  animation: glitch-slice-a 3.6s steps(2, end) infinite;
+}
+
+.glitch-text::after {
+  color: rgba(110, 180, 255, 0.72);
+  text-shadow: -1px 0 0 rgba(110, 180, 255, 0.38);
+  transform: translateX(0);
+  clip-path: inset(0 0 0 0);
+  animation: glitch-slice-b 4.1s steps(2, end) infinite;
+}
+
+.signal-chip {
+  position: relative;
+  overflow: hidden;
+}
+
+.signal-chip::after {
+  content: "";
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  left: -32%;
+  width: 32%;
+  background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.18), transparent);
+  transform: skewX(-18deg);
+  animation: signal-sweep 6.5s ease-in-out infinite;
+}
+
+.distressed-button {
+  position: relative;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  border: 1px solid rgba(148, 163, 184, 0.16);
+  border-radius: 0.45rem;
+  background:
+    linear-gradient(180deg, rgba(31, 41, 55, 0.42), rgba(10, 10, 14, 0.78)),
+    repeating-linear-gradient(
+      135deg,
+      rgba(255, 255, 255, 0.02) 0,
+      rgba(255, 255, 255, 0.02) 2px,
+      transparent 2px,
+      transparent 6px
+    );
+  box-shadow:
+    inset 0 1px 0 rgba(255, 255, 255, 0.06),
+    inset 0 -1px 0 rgba(0, 0, 0, 0.28);
+  transition:
+    border-color 160ms ease,
+    background-color 160ms ease,
+    transform 160ms ease,
+    opacity 160ms ease;
+}
+
+.distressed-button::before {
+  content: "";
+  position: absolute;
+  inset: 1px;
+  border-radius: 0.35rem;
+  border: 1px solid rgba(255, 255, 255, 0.03);
+  pointer-events: none;
+}
+
+.distressed-button:hover {
+  transform: translateY(-1px);
+}
+
+.distressed-button:disabled {
+  cursor: not-allowed;
+  opacity: 0.48;
+  transform: none;
+}
+
+.distressed-button-neutral {
+  border-color: rgba(148, 163, 184, 0.18);
+  color: rgb(228 228 231);
+}
+
+.distressed-button-neutral:hover {
+  border-color: rgba(212, 212, 216, 0.28);
+  background-color: rgba(39, 39, 42, 0.5);
+}
+
+.distressed-button-danger {
+  border-color: rgba(251, 113, 133, 0.26);
+  color: rgb(255 228 230);
+}
+
+.distressed-button-danger:hover {
+  border-color: rgba(251, 113, 133, 0.46);
+  background-color: rgba(80, 10, 25, 0.42);
+}
+
+.distressed-button-info {
+  border-color: rgba(56, 189, 248, 0.24);
+  color: rgb(224 242 254);
+}
+
+.distressed-button-info:hover {
+  border-color: rgba(56, 189, 248, 0.4);
+  background-color: rgba(8, 47, 73, 0.42);
+}
+
+.distressed-button-warn {
+  border-color: rgba(251, 191, 36, 0.24);
+  color: rgb(254 249 195);
+}
+
+.distressed-button-warn:hover {
+  border-color: rgba(251, 191, 36, 0.42);
+  background-color: rgba(69, 39, 8, 0.42);
+}
+
+.distressed-button-success {
+  border-color: rgba(74, 222, 128, 0.24);
+  color: rgb(220 252 231);
+}
+
+.distressed-button-success:hover {
+  border-color: rgba(74, 222, 128, 0.4);
+  background-color: rgba(8, 56, 28, 0.42);
+}
+
+@keyframes glitch-base {
+  0%,
+  84%,
+  100% {
+    transform: translate3d(0, 0, 0);
+    text-shadow:
+      0.02em 0 0 rgba(255, 92, 92, 0.32),
+      -0.02em 0 0 rgba(120, 190, 255, 0.18);
+  }
+
+  85% {
+    transform: translate3d(-1px, 0, 0) skewX(-1.5deg);
+  }
+
+  86% {
+    transform: translate3d(2px, 0, 0) skewX(1.5deg);
+  }
+
+  87% {
+    transform: translate3d(-2px, 0, 0);
+  }
+
+  88% {
+    transform: translate3d(0, 0, 0);
+  }
+}
+
+@keyframes glitch-slice-a {
+  0%,
+  82%,
+  100% {
+    opacity: 0;
+    transform: translateX(0);
+    clip-path: inset(0 0 0 0);
+  }
+
+  83% {
+    opacity: 0.85;
+    transform: translateX(-3px);
+    clip-path: inset(8% 0 52% 0);
+  }
+
+  84% {
+    opacity: 0.78;
+    transform: translateX(3px);
+    clip-path: inset(62% 0 12% 0);
+  }
+
+  85% {
+    opacity: 0.55;
+    transform: translateX(-1px);
+    clip-path: inset(34% 0 34% 0);
+  }
+}
+
+@keyframes glitch-slice-b {
+  0%,
+  76%,
+  100% {
+    opacity: 0;
+    transform: translateX(0);
+    clip-path: inset(0 0 0 0);
+  }
+
+  77% {
+    opacity: 0.72;
+    transform: translateX(4px);
+    clip-path: inset(0 0 68% 0);
+  }
+
+  78% {
+    opacity: 0.8;
+    transform: translateX(-4px);
+    clip-path: inset(52% 0 18% 0);
+  }
+
+  79% {
+    opacity: 0.48;
+    transform: translateX(2px);
+    clip-path: inset(28% 0 42% 0);
+  }
+}
+
+@keyframes signal-sweep {
+  0%,
+  72%,
+  100% {
+    transform: translateX(0) skewX(-18deg);
+    opacity: 0;
+  }
+
+  76% {
+    opacity: 0.75;
+  }
+
+  88% {
+    transform: translateX(420%) skewX(-18deg);
+    opacity: 0.12;
+  }
+}
+
+@keyframes pulse-glow {
+  0%,
+  100% {
+    transform: scale(1);
+    opacity: 0.2;
+  }
+
+  50% {
+    transform: scale(1.08);
+    opacity: 0.38;
+  }
 }

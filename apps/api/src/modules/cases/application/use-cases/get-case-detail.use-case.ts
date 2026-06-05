@@ -13,10 +13,9 @@ export class GetCaseDetailUseCase {
     const caseItem = await this.caseRepository.findById(caseId);
 
     if (!caseItem || !caseItem.isVisible()) {
-      throw new NotFoundException(`Case ${caseId} was not found.`);
+      throw new NotFoundException(`사건 문서 ${caseId}를 찾을 수 없습니다.`);
     }
 
     return caseItem;
   }
 }
-

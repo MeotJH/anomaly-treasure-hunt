@@ -14,8 +14,8 @@ const geistMono = Geist_Mono({
 });
 
 export const metadata: Metadata = {
-  title: "Anomaly Treasure Hunt MVP",
-  description: "Next.js frontend for the anomaly investigation MVP.",
+  title: "이상현상 추적 기록보관소",
+  description: "이상현상 문서 열람, 현장 제보, 보상 대상 발표를 위한 조사용 화면입니다.",
 };
 
 export default function RootLayout({

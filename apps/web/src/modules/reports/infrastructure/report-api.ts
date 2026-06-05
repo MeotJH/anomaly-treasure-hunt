@@ -12,7 +12,7 @@ async function readJson<T>(path: string, init?: RequestInit) {
 
   if (!response.ok) {
     const message = await response.text();
-    throw new Error(message || `Request failed: ${response.status}`);
+    throw new Error(message || `요청에 실패했습니다. 상태 코드: ${response.status}`);
   }
 
   return (await response.json()) as T;
@@ -34,4 +34,3 @@ export async function submitCaseReport(caseId: string, payload: { code: string; 
     body: JSON.stringify(payload),
   });
 }
-

@@ -1,4 +1,4 @@
-import { Body, Controller, Get, Param, Patch, Post, Req } from "@nestjs/common";
+import { Body, Controller, Get, Inject, Param, Patch, Post, Req } from "@nestjs/common";
 import { Request } from "express";
 import { CreateAdminCaseUseCase } from "../../application/use-cases/create-admin-case.use-case";
 import { DrawWinnerUseCase } from "../../application/use-cases/draw-winner.use-case";
@@ -16,12 +16,19 @@ import { UpdateWinnerRewardDto } from "./update-winner-reward.dto";
 @Controller("api/admin")
 export class AdminController {
   constructor(
+    @Inject(ListAdminCasesUseCase)
     private readonly listAdminCasesUseCase: ListAdminCasesUseCase,
+    @Inject(CreateAdminCaseUseCase)
     private readonly createAdminCaseUseCase: CreateAdminCaseUseCase,
+    @Inject(UpdateAdminCaseUseCase)
     private readonly updateAdminCaseUseCase: UpdateAdminCaseUseCase,
+    @Inject(ListCaseReportsUseCase)
     private readonly listCaseReportsUseCase: ListCaseReportsUseCase,
+    @Inject(ReviewReportUseCase)
     private readonly reviewReportUseCase: ReviewReportUseCase,
+    @Inject(DrawWinnerUseCase)
     private readonly drawWinnerUseCase: DrawWinnerUseCase,
+    @Inject(UpdateWinnerRewardUseCase)
     private readonly updateWinnerRewardUseCase: UpdateWinnerRewardUseCase,
   ) {}
 

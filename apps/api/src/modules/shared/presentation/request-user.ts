@@ -10,7 +10,7 @@ export function getRequestUser(request: Request): RequestUser {
   const id = request.header("x-user-id");
 
   if (!id) {
-    throw new UnauthorizedException("x-user-id header is required in demo mode.");
+    throw new UnauthorizedException("데모 모드에서는 x-user-id 헤더가 필요합니다.");
   }
 
   const roleHeader = request.header("x-user-role");
@@ -23,7 +23,7 @@ export function requireAdmin(request: Request): RequestUser {
   const user = getRequestUser(request);
 
   if (user.role !== "admin") {
-    throw new ForbiddenException("Admin role is required.");
+    throw new ForbiddenException("관리자 권한이 필요합니다.");
   }
 
   return user;

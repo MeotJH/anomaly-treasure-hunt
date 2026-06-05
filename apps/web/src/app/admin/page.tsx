@@ -9,7 +9,7 @@ export default async function AdminPage() {
   if (!selectedCase) {
     return (
       <div className="rounded-3xl border border-white/10 bg-white/5 p-8 text-sm text-zinc-300">
-        No cases are available for admin management.
+        통제실에서 관리할 사건 문서가 아직 없습니다.
       </div>
     );
   }

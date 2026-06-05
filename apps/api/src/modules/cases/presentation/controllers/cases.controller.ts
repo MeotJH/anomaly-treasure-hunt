@@ -1,4 +1,4 @@
-import { Controller, Get, Param } from "@nestjs/common";
+import { Controller, Get, Inject, Param } from "@nestjs/common";
 import { CaseResponseMapper } from "../../application/services/case-response.mapper";
 import { GetCaseDetailUseCase } from "../../application/use-cases/get-case-detail.use-case";
 import { GetCurrentCaseUseCase } from "../../application/use-cases/get-current-case.use-case";
@@ -7,9 +7,13 @@ import { ListCasesUseCase } from "../../application/use-cases/list-cases.use-cas
 @Controller("api/cases")
 export class CasesController {
   constructor(
+    @Inject(GetCurrentCaseUseCase)
     private readonly getCurrentCaseUseCase: GetCurrentCaseUseCase,
+    @Inject(ListCasesUseCase)
     private readonly listCasesUseCase: ListCasesUseCase,
+    @Inject(GetCaseDetailUseCase)
     private readonly getCaseDetailUseCase: GetCaseDetailUseCase,
+    @Inject(CaseResponseMapper)
     private readonly mapper: CaseResponseMapper,
   ) {}
 
@@ -38,4 +42,3 @@ export class CasesController {
     return this.mapper.toDetail(caseItem, now);
   }
 }
-

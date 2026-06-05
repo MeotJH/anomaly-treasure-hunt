@@ -1,10 +1,31 @@
 import { appConfig, createDemoHeaders } from "@/lib/config";
 import {
   AdminCaseRecord,
+  CaseClue,
   CaseDetail,
   CaseResult,
   CaseSummary,
+  MissionInstruction,
 } from "../domain/case";
+
+export interface AdminCasePayload {
+  fileNo: string;
+  title: string;
+  accessLevel: string;
+  status: "draft" | "published" | "closed" | "announced";
+  rewardName: string;
+  summary: string;
+  reportBody: string;
+  safetyNotice: string;
+  startsAt: string;
+  endsAt: string;
+  announcedAt: string;
+  answerLocation: string;
+  identificationCode: string;
+  completionMessage: string;
+  clues: CaseClue[];
+  mission: MissionInstruction;
+}
 
 async function readJson<T>(path: string, init?: RequestInit) {
   const response = await fetch(`${appConfig.apiBaseUrl}${path}`, {
@@ -13,7 +34,8 @@ async function readJson<T>(path: string, init?: RequestInit) {
   });
 
   if (!response.ok) {
-    throw new Error(`Request failed: ${response.status} ${path}`);
+    const message = await response.text();
+    throw new Error(message || `요청에 실패했습니다. 상태 코드: ${response.status}`);
   }
 
   return (await response.json()) as T;
@@ -47,22 +69,7 @@ export async function fetchAdminCases() {
   });
 }
 
-export async function createAdminCase(payload: {
-  fileNo: string;
-  title: string;
-  accessLevel: string;
-  status: "draft" | "published" | "closed" | "announced";
-  rewardName: string;
-  summary: string;
-  reportBody: string;
-  safetyNotice: string;
-  startsAt: string;
-  endsAt: string;
-  announcedAt: string;
-  answerLocation: string;
-  identificationCode: string;
-  completionMessage: string;
-}) {
+export async function createAdminCase(payload: AdminCasePayload) {
   return readJson<AdminCaseRecord>("/api/admin/cases", {
     method: "POST",
     headers: {
@@ -75,21 +82,7 @@ export async function createAdminCase(payload: {
 
 export async function updateAdminCase(
   caseId: string,
-  payload: Partial<{
-    title: string;
-    accessLevel: string;
-    status: "draft" | "published" | "closed" | "announced";
-    rewardName: string;
-    summary: string;
-    reportBody: string;
-    safetyNotice: string;
-    startsAt: string;
-    endsAt: string;
-    announcedAt: string;
-    answerLocation: string;
-    identificationCode: string;
-    completionMessage: string;
-  }>,
+  payload: Partial<AdminCasePayload>,
 ) {
   return readJson<AdminCaseRecord>(`/api/admin/cases/${caseId}`, {
     method: "PATCH",
