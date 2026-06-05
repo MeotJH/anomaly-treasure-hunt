@@ -14,13 +14,13 @@ const badgeTone = {
 
 const badgeLabel: Record<string, string> = {
   published: "공개 중",
-  announced: "발표됨",
+  announced: "발표 대기",
   closed: "종료",
   pending: "검토 대기",
   approved: "승인",
   rejected: "반려",
-  selected: "선정됨",
-  notified: "통보 완료",
+  selected: "당첨",
+  notified: "안내 완료",
   reward_sent: "보상 지급",
   cancelled: "취소",
   draft: "초안",

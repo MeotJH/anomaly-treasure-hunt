@@ -26,9 +26,7 @@ export function CaseDetailView({ caseDetail }: { caseDetail: CaseDetail }) {
                 {caseDetail.title}
               </span>
             </h2>
-            <p className="mt-4 max-w-3xl text-base leading-8 text-zinc-300">
-              {caseDetail.summary}
-            </p>
+            <p className="mt-4 max-w-3xl text-base leading-8 text-zinc-300">{caseDetail.summary}</p>
           </div>
           <StatusBadge label={caseDetail.status} />
         </div>
@@ -41,12 +39,14 @@ export function CaseDetailView({ caseDetail }: { caseDetail: CaseDetail }) {
             href={`/cases/${caseDetail.id}/report`}
             className="signal-chip distressed-button distressed-button-danger px-5 py-3 font-medium"
           >
-            현장 제보 시작
+            현장 보고 시작
           </Link>
         </div>
       </section>
 
-      <Block title="이상 관측 보고서">{caseDetail.reportBody}</Block>
+      <Block title="이상 관측 보고서">
+        <div className="whitespace-pre-line">{caseDetail.reportBody}</div>
+      </Block>
 
       <Block title="수집된 단서">
         <ol className="space-y-4">
@@ -65,7 +65,12 @@ export function CaseDetailView({ caseDetail }: { caseDetail: CaseDetail }) {
         <Block title="증거 촬영 조건">{caseDetail.mission.photoRequirement}</Block>
       </div>
 
-      <Block title="안전 수칙">{caseDetail.safetyNotice}</Block>
+      <Block title="안전 수칙">
+        <div className="space-y-4">
+          <p>{caseDetail.safetyNotice}</p>
+          <p className="text-zinc-400">{caseDetail.mission.caution}</p>
+        </div>
+      </Block>
     </div>
   );
 }

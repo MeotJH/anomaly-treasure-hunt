@@ -23,14 +23,10 @@ export default async function ReportPage({
           <h3 className="text-sm font-semibold uppercase tracking-[0.24em] text-zinc-400">
             증거 촬영 조건
           </h3>
-          <p className="mt-3 text-sm leading-7 text-zinc-300">
-            {caseDetail.mission.photoRequirement}
-          </p>
+          <p className="mt-3 text-sm leading-7 text-zinc-300">{caseDetail.mission.photoRequirement}</p>
         </div>
         <div>
-          <h3 className="text-sm font-semibold uppercase tracking-[0.24em] text-zinc-400">
-            안전 수칙
-          </h3>
+          <h3 className="text-sm font-semibold uppercase tracking-[0.24em] text-zinc-400">안전 수칙</h3>
           <p className="mt-3 text-sm leading-7 text-zinc-300">{caseDetail.safetyNotice}</p>
         </div>
       </aside>
