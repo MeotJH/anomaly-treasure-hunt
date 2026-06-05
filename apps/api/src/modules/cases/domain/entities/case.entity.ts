@@ -108,6 +108,18 @@ export class InvestigationCase {
     return this.props.safetyNotice;
   }
 
+  toSnapshot() {
+    return {
+      ...this.props,
+      clues: this.props.clues.map((clue) => ({ ...clue })),
+      mission: { ...this.props.mission },
+    };
+  }
+
+  update(next: Partial<InvestigationCaseProps>) {
+    Object.assign(this.props, next);
+  }
+
   isReportOpen(now: Date) {
     return now >= this.props.startsAt && now <= this.props.endsAt;
   }
@@ -120,4 +132,3 @@ export class InvestigationCase {
     return this.props.status !== "draft";
   }
 }
-

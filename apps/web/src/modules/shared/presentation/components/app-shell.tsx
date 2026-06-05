@@ -21,6 +21,9 @@ export function AppShell({ children }: PropsWithChildren) {
             <Link href="/" className="rounded-full border border-white/10 px-4 py-2 hover:border-emerald-400/40">
               Home
             </Link>
+            <Link href="/cases" className="rounded-full border border-white/10 px-4 py-2 hover:border-emerald-400/40">
+              Cases
+            </Link>
             <Link href="/me/reports" className="rounded-full border border-white/10 px-4 py-2 hover:border-emerald-400/40">
               My Reports
             </Link>
@@ -34,4 +37,3 @@ export function AppShell({ children }: PropsWithChildren) {
     </div>
   );
 }
-

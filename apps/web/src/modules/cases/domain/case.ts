@@ -43,3 +43,10 @@ export interface CaseResult {
   } | null;
 }
 
+export interface AdminCaseRecord extends CaseSummary {
+  reportBody: string;
+  safetyNotice: string;
+  answerLocation: string;
+  identificationCode: string;
+  completionMessage: string;
+}

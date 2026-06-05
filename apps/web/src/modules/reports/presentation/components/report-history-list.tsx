@@ -5,7 +5,7 @@ export function ReportHistoryList({ reports }: { reports: InvestigationReportSna
   if (reports.length === 0) {
     return (
       <div className="rounded-3xl border border-white/10 bg-white/5 p-6 text-sm text-zinc-400">
-        아직 제출된 보고가 없습니다.
+        No reports have been submitted yet.
       </div>
     );
   }
@@ -22,12 +22,12 @@ export function ReportHistoryList({ reports }: { reports: InvestigationReportSna
             <StatusBadge label={report.reviewStatus} />
           </div>
           <div className="mt-4 flex flex-wrap gap-3 text-sm text-zinc-400">
-            <span>코드 일치: {report.isCodeCorrect ? "예" : "아니오"}</span>
-            <span>제출시각: {new Date(report.submittedAt).toLocaleString()}</span>
+            <span>Code match: {report.isCodeCorrect ? "yes" : "no"}</span>
+            <span>Submitted: {new Date(report.submittedAt).toLocaleString()}</span>
           </div>
           {report.rejectionReason ? (
             <p className="mt-4 rounded-2xl border border-rose-400/20 bg-rose-400/10 px-4 py-3 text-sm text-rose-100">
-              반려 사유: {report.rejectionReason}
+              Rejection reason: {report.rejectionReason}
             </p>
           ) : null}
         </article>
@@ -35,4 +35,3 @@ export function ReportHistoryList({ reports }: { reports: InvestigationReportSna
     </div>
   );
 }
-

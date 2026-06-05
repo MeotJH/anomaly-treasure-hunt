@@ -23,4 +23,3 @@ export interface AdminWinnerRecord {
   status: string;
   selectedAt: string;
 }
-

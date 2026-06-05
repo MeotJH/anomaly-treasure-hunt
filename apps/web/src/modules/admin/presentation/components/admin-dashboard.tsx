@@ -1,8 +1,9 @@
 "use client";
 
-import { useState } from "react";
-import { CaseSummary } from "@/modules/cases/domain/case";
+import { useState, useTransition } from "react";
+import { AdminCaseRecord, CaseSummary } from "@/modules/cases/domain/case";
 import {
+  fetchAdminReports,
   drawWinner,
   reviewAdminReport,
   updateWinnerReward,
@@ -12,16 +13,47 @@ import {
   InvestigationReportSnapshot,
 } from "@/modules/reports/domain/report";
 import { StatusBadge } from "@/modules/shared/presentation/components/status-badge";
+import { AdminCaseManager } from "./admin-case-manager";
 
 interface AdminDashboardProps {
+  cases: AdminCaseRecord[];
   caseItem: CaseSummary;
   reports: InvestigationReportSnapshot[];
 }
 
-export function AdminDashboard({ caseItem, reports: initialReports }: AdminDashboardProps) {
+export function AdminDashboard({
+  cases: initialCases,
+  caseItem,
+  reports: initialReports,
+}: AdminDashboardProps) {
+  const [cases, setCases] = useState(initialCases);
+  const [selectedCaseId, setSelectedCaseId] = useState(caseItem.id);
   const [reports, setReports] = useState(initialReports);
   const [winner, setWinner] = useState<AdminWinnerRecord | null>(null);
   const [message, setMessage] = useState<string | null>(null);
+  const [isPending, startTransition] = useTransition();
+
+  const selectedCase =
+    cases.find((candidate) => candidate.id === selectedCaseId) ?? cases[0] ?? caseItem;
+
+  async function loadReportsForCase(caseId: string) {
+    try {
+      const nextReports = await fetchAdminReports(caseId);
+      setReports(nextReports);
+    } catch (error) {
+      setMessage(error instanceof Error ? error.message : "Failed to load reports.");
+    }
+  }
+
+  function handleSelectedCaseChange(nextCaseId: string) {
+    setSelectedCaseId(nextCaseId);
+    setWinner(null);
+    setMessage(null);
+
+    startTransition(() => {
+      void loadReportsForCase(nextCaseId);
+    });
+  }
 
   async function handleReview(reportId: string, reviewStatus: "approved" | "rejected") {
     try {
@@ -29,19 +61,19 @@ export function AdminDashboard({ caseItem, reports: initialReports }: AdminDashb
       setReports((current) =>
         current.map((report) => (report.id === reportId ? updatedReport : report)),
       );
-      setMessage(`보고 ${reportId}가 ${reviewStatus} 처리되었습니다.`);
+      setMessage(`Report ${reportId} was marked as ${reviewStatus}.`);
     } catch (error) {
-      setMessage(error instanceof Error ? error.message : "리뷰 중 오류가 발생했습니다.");
+      setMessage(error instanceof Error ? error.message : "An error occurred while reviewing.");
     }
   }
 
   async function handleDraw() {
     try {
-      const selectedWinner = await drawWinner(caseItem.id);
+      const selectedWinner = await drawWinner(selectedCase.id);
       setWinner(selectedWinner);
-      setMessage("보상 대상자가 추첨되었습니다.");
+      setMessage("A winner was selected from approved reports.");
     } catch (error) {
-      setMessage(error instanceof Error ? error.message : "추첨 중 오류가 발생했습니다.");
+      setMessage(error instanceof Error ? error.message : "An error occurred during draw.");
     }
   }
 
@@ -53,20 +85,32 @@ export function AdminDashboard({ caseItem, reports: initialReports }: AdminDashb
     try {
       const updatedWinner = await updateWinnerReward(winner.id, "reward_sent");
       setWinner(updatedWinner);
-      setMessage("보상 지급 상태가 reward_sent 로 변경되었습니다.");
+      setMessage("Winner reward status was updated to reward_sent.");
     } catch (error) {
-      setMessage(error instanceof Error ? error.message : "상태 갱신 중 오류가 발생했습니다.");
+      setMessage(
+        error instanceof Error ? error.message : "An error occurred while updating reward state.",
+      );
     }
   }
 
   return (
     <div className="space-y-6">
+      <AdminCaseManager
+        cases={cases}
+        selectedCaseId={selectedCaseId}
+        onCasesChange={setCases}
+        onSelectedCaseChange={handleSelectedCaseChange}
+      />
+
       <section className="rounded-[2rem] border border-white/10 bg-white/5 p-8">
-        <p className="text-xs uppercase tracking-[0.28em] text-zinc-500">{caseItem.fileNo}</p>
-        <h2 className="mt-3 text-3xl font-semibold text-zinc-50">{caseItem.title}</h2>
+        <p className="text-xs uppercase tracking-[0.28em] text-zinc-500">{selectedCase.fileNo}</p>
+        <h2 className="mt-3 text-3xl font-semibold text-zinc-50">{selectedCase.title}</h2>
         <p className="mt-3 text-sm leading-7 text-zinc-300">
-          관리자 데모 모드입니다. `x-user-role=admin` 헤더를 사용하는 Nest API와 연결됩니다.
+          Demo admin mode backed by the Nest API using the `x-user-role=admin` header.
         </p>
+        {isPending ? (
+          <p className="mt-3 text-sm text-zinc-400">Loading reports for selected case...</p>
+        ) : null}
       </section>
 
       <section className="space-y-4">
@@ -97,7 +141,7 @@ export function AdminDashboard({ caseItem, reports: initialReports }: AdminDashb
         ))}
         {reports.length === 0 ? (
           <div className="rounded-3xl border border-white/10 bg-white/5 p-6 text-sm text-zinc-400">
-            아직 제출된 보고가 없습니다.
+            No submitted reports are available for this case.
           </div>
         ) : null}
       </section>
@@ -136,4 +180,3 @@ export function AdminDashboard({ caseItem, reports: initialReports }: AdminDashb
     </div>
   );
 }
-

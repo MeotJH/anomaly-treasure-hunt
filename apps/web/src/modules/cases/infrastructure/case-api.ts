@@ -1,5 +1,10 @@
 import { appConfig, createDemoHeaders } from "@/lib/config";
-import { CaseDetail, CaseResult, CaseSummary } from "../domain/case";
+import {
+  AdminCaseRecord,
+  CaseDetail,
+  CaseResult,
+  CaseSummary,
+} from "../domain/case";
 
 async function readJson<T>(path: string, init?: RequestInit) {
   const response = await fetch(`${appConfig.apiBaseUrl}${path}`, {
@@ -36,3 +41,62 @@ export async function fetchCaseResult(caseId: string) {
   });
 }
 
+export async function fetchAdminCases() {
+  return readJson<AdminCaseRecord[]>("/api/admin/cases", {
+    headers: createDemoHeaders("admin"),
+  });
+}
+
+export async function createAdminCase(payload: {
+  fileNo: string;
+  title: string;
+  accessLevel: string;
+  status: "draft" | "published" | "closed" | "announced";
+  rewardName: string;
+  summary: string;
+  reportBody: string;
+  safetyNotice: string;
+  startsAt: string;
+  endsAt: string;
+  announcedAt: string;
+  answerLocation: string;
+  identificationCode: string;
+  completionMessage: string;
+}) {
+  return readJson<AdminCaseRecord>("/api/admin/cases", {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json",
+      ...createDemoHeaders("admin"),
+    },
+    body: JSON.stringify(payload),
+  });
+}
+
+export async function updateAdminCase(
+  caseId: string,
+  payload: Partial<{
+    title: string;
+    accessLevel: string;
+    status: "draft" | "published" | "closed" | "announced";
+    rewardName: string;
+    summary: string;
+    reportBody: string;
+    safetyNotice: string;
+    startsAt: string;
+    endsAt: string;
+    announcedAt: string;
+    answerLocation: string;
+    identificationCode: string;
+    completionMessage: string;
+  }>,
+) {
+  return readJson<AdminCaseRecord>(`/api/admin/cases/${caseId}`, {
+    method: "PATCH",
+    headers: {
+      "Content-Type": "application/json",
+      ...createDemoHeaders("admin"),
+    },
+    body: JSON.stringify(payload),
+  });
+}
