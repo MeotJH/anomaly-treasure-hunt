@@ -66,16 +66,29 @@ export class SubmitInvestigationReportUseCase {
     }
 
     const normalizedCode = this.identificationCodeService.normalize(command.code);
-    const isCodeCorrect =
-      normalizedCode === this.identificationCodeService.normalize(caseItem.identificationCode);
+    const normalizedPhotoUrl = command.photoUrl.trim();
+
+    if (!normalizedCode) {
+      throw new BadRequestException("식별 코드를 비워둘 수 없습니다.");
+    }
+
+    if (!/^local-evidence\/[a-z0-9-]+\/[^/]+$/i.test(normalizedPhotoUrl)) {
+      throw new BadRequestException("증거 사진 참조 형식이 올바르지 않습니다.");
+    }
+
+    const normalizedCodeHash = this.identificationCodeService.hash(normalizedCode);
+    const isCodeCorrect = this.identificationCodeService.matches(
+      normalizedCode,
+      caseItem.identificationCodeHash,
+    );
 
     const report = new InvestigationReport({
       id: `report-${Date.now()}-${submissionCount + 1}`,
       caseId: command.caseId,
       userId: command.userId,
-      submittedCode: command.code,
-      normalizedCode,
-      photoUrl: command.photoUrl,
+      submittedCodeMask: this.identificationCodeService.mask(normalizedCode),
+      normalizedCodeHash,
+      photoUrl: normalizedPhotoUrl,
       isCodeCorrect,
       reviewStatus: "pending",
       rejectionReason: null,

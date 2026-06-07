@@ -5,8 +5,8 @@ export interface InvestigationReportProps {
   id: string;
   caseId: string;
   userId: string;
-  submittedCode: string;
-  normalizedCode: string;
+  submittedCodeMask: string;
+  normalizedCodeHash: string;
   photoUrl: string;
   isCodeCorrect: boolean;
   reviewStatus: ReviewStatus;
@@ -30,8 +30,8 @@ export class InvestigationReport {
     return this.props.userId;
   }
 
-  get normalizedCode() {
-    return this.props.normalizedCode;
+  get normalizedCodeHash() {
+    return this.props.normalizedCodeHash;
   }
 
   get photoUrl() {
@@ -119,4 +119,3 @@ export class WinnerRecord {
     return { ...this.props };
   }
 }
-

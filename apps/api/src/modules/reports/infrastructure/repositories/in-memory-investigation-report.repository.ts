@@ -35,6 +35,12 @@ export class InMemoryInvestigationReportRepository
     );
   }
 
+  async findByCaseAndUser(caseId: string, userId: string) {
+    return this.reports.filter(
+      (report) => report.caseId === caseId && report.userId === userId,
+    );
+  }
+
   async findByUserId(userId: string) {
     return this.reports.filter((report) => report.userId === userId);
   }
@@ -87,4 +93,3 @@ export class InMemoryInvestigationReportRepository
     return winner;
   }
 }
-

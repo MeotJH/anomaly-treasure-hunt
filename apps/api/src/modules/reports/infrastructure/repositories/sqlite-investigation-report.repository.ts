@@ -54,8 +54,8 @@ export class SqliteInvestigationReportRepository
         snapshot.id,
         snapshot.caseId,
         snapshot.userId,
-        snapshot.submittedCode,
-        snapshot.normalizedCode,
+        snapshot.submittedCodeMask,
+        snapshot.normalizedCodeHash,
         snapshot.photoUrl,
         snapshot.isCodeCorrect ? 1 : 0,
         snapshot.reviewStatus,
@@ -83,6 +83,18 @@ export class SqliteInvestigationReportRepository
       .get(caseId, userId) as ReportRow | undefined;
 
     return row ? this.mapReport(row) : null;
+  }
+
+  async findByCaseAndUser(caseId: string, userId: string) {
+    const rows = this.sqliteDatabase.connection
+      .prepare(`
+        SELECT * FROM reports
+        WHERE case_id = ? AND user_id = ?
+        ORDER BY submitted_at DESC
+      `)
+      .all(caseId, userId) as ReportRow[];
+
+    return rows.map((row) => this.mapReport(row));
   }
 
   async findByUserId(userId: string) {
@@ -194,8 +206,8 @@ export class SqliteInvestigationReportRepository
       id: row.id,
       caseId: row.case_id,
       userId: row.user_id,
-      submittedCode: row.submitted_code,
-      normalizedCode: row.normalized_code,
+      submittedCodeMask: row.submitted_code,
+      normalizedCodeHash: row.normalized_code,
       photoUrl: row.photo_url,
       isCodeCorrect: row.is_code_correct === 1,
       reviewStatus: row.review_status,

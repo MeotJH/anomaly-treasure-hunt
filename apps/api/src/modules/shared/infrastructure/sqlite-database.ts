@@ -3,6 +3,29 @@ import { mkdirSync } from "node:fs";
 import { dirname, resolve } from "node:path";
 import { DatabaseSync } from "node:sqlite";
 import { createSeedCases } from "./sqlite-seed";
+import { createHash } from "node:crypto";
+
+function normalizeCode(code: string) {
+  return code.trim().toUpperCase().replace(/\s+/g, "");
+}
+
+function hashCode(code: string) {
+  return createHash("sha256").update(normalizeCode(code)).digest("hex");
+}
+
+function isHash(value: string) {
+  return /^[a-f0-9]{64}$/i.test(value);
+}
+
+function maskCode(code: string) {
+  const normalizedCode = normalizeCode(code);
+
+  if (normalizedCode.length <= 4) {
+    return "*".repeat(normalizedCode.length);
+  }
+
+  return `${normalizedCode.slice(0, 2)}${"*".repeat(normalizedCode.length - 4)}${normalizedCode.slice(-2)}`;
+}
 
 @Injectable()
 export class SqliteDatabase implements OnModuleDestroy {
@@ -17,6 +40,7 @@ export class SqliteDatabase implements OnModuleDestroy {
     this.database = new DatabaseSync(filePath);
     this.database.exec("PRAGMA foreign_keys = ON;");
     this.initializeSchema();
+    this.migrateLegacySecrets();
     this.syncSeedCases();
   }
 
@@ -143,13 +167,53 @@ export class SqliteDatabase implements OnModuleDestroy {
         seed.endsAt.toISOString(),
         seed.announcedAt.toISOString(),
         seed.answerLocation,
-        seed.identificationCode,
+        seed.identificationCodeHash,
         seed.completionMessage,
         JSON.stringify(seed.clues),
         seed.mission.instruction,
         seed.mission.photoRequirement,
         seed.mission.caution,
       );
+    }
+  }
+
+  private migrateLegacySecrets() {
+    const caseRows = this.database
+      .prepare("SELECT id, identification_code FROM cases")
+      .all() as Array<{ id: string; identification_code: string }>;
+
+    const updateCaseCode = this.database.prepare(
+      "UPDATE cases SET identification_code = ? WHERE id = ?",
+    );
+
+    for (const row of caseRows) {
+      if (row.identification_code && !isHash(row.identification_code)) {
+        updateCaseCode.run(hashCode(row.identification_code), row.id);
+      }
+    }
+
+    const reportRows = this.database
+      .prepare("SELECT id, submitted_code, normalized_code FROM reports")
+      .all() as Array<{
+        id: string;
+        submitted_code: string;
+        normalized_code: string;
+      }>;
+
+    const updateReportCode = this.database.prepare(`
+      UPDATE reports
+      SET submitted_code = ?, normalized_code = ?
+      WHERE id = ?
+    `);
+
+    for (const row of reportRows) {
+      if (row.normalized_code && !isHash(row.normalized_code)) {
+        updateReportCode.run(
+          maskCode(row.submitted_code || row.normalized_code),
+          hashCode(row.normalized_code),
+          row.id,
+        );
+      }
     }
   }
 }

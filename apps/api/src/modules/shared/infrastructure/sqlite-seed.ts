@@ -1,4 +1,11 @@
 import { InvestigationCaseProps } from "../../cases/domain/entities/case.entity";
+import { createHash } from "node:crypto";
+
+function hashCode(code: string) {
+  return createHash("sha256")
+    .update(code.trim().toUpperCase().replace(/\s+/g, ""))
+    .digest("hex");
+}
 
 export function createSeedCases(now = new Date()): InvestigationCaseProps[] {
   const activeStart = new Date(now.getTime() - 1000 * 60 * 60 * 12);
@@ -69,7 +76,7 @@ LOCATION NAME REQUIRED
       endsAt: activeEnd,
       announcedAt: activeAnnounced,
       answerLocation: "서울숲",
-      identificationCode: "GREEN-LUNG-001",
+      identificationCodeHash: hashCode("GREEN-LUNG-001"),
       completionMessage:
         "식별 코드와 현장 증거가 접수되었습니다. 승인된 보고서는 FILE-001 보상 추첨 대상에 편입됩니다.",
       clues: [
@@ -126,7 +133,7 @@ EMPTY_TANK_ACTIVE
       endsAt: closedEnd,
       announcedAt: closedAnnounced,
       answerLocation: "문화비축기지",
-      identificationCode: "EMPTY-TANK-002",
+      identificationCodeHash: hashCode("EMPTY-TANK-002"),
       completionMessage: "FILE-002 보고서가 처리되었습니다. 승인된 제보는 추첨 대상에 반영됩니다.",
       clues: [
         {
@@ -174,7 +181,7 @@ EMPTY_TANK_ACTIVE
       endsAt: closedEnd,
       announcedAt: closedAnnounced,
       answerLocation: "선유도공원",
-      identificationCode: "STILL-WATER-003",
+      identificationCodeHash: hashCode("STILL-WATER-003"),
       completionMessage:
         "FILE-003 기록이 보강되었습니다. 검토 완료된 증거는 보상 추첨 대상에 포함됩니다.",
       clues: [

@@ -27,7 +27,7 @@ export interface InvestigationCaseProps {
   endsAt: Date;
   announcedAt: Date;
   answerLocation: string;
-  identificationCode: string;
+  identificationCodeHash: string;
   completionMessage: string;
   clues: CaseClue[];
   mission: MissionInstruction;
@@ -60,8 +60,8 @@ export class InvestigationCase {
     return this.props.answerLocation;
   }
 
-  get identificationCode() {
-    return this.props.identificationCode;
+  get identificationCodeHash() {
+    return this.props.identificationCodeHash;
   }
 
   get startsAt() {
