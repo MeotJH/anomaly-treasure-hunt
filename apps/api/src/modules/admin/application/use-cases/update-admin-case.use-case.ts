@@ -2,6 +2,7 @@ import { Inject, Injectable, NotFoundException } from "@nestjs/common";
 import { CASE_REPOSITORY } from "../../../cases/cases.tokens";
 import { InvestigationCaseProps } from "../../../cases/domain/entities/case.entity";
 import { CaseRepository } from "../../../cases/domain/repositories/case.repository";
+import { IdentificationCodeService } from "../../../reports/application/services/identification-code.service";
 
 export type UpdateAdminCaseCommand = Partial<{
   title: string;
@@ -26,6 +27,8 @@ export class UpdateAdminCaseUseCase {
   constructor(
     @Inject(CASE_REPOSITORY)
     private readonly caseRepository: CaseRepository,
+    @Inject(IdentificationCodeService)
+    private readonly identificationCodeService: IdentificationCodeService,
   ) {}
 
   async execute(caseId: string, command: UpdateAdminCaseCommand) {
@@ -47,7 +50,13 @@ export class UpdateAdminCaseUseCase {
       ...("endsAt" in command ? { endsAt: new Date(command.endsAt!) } : {}),
       ...("announcedAt" in command ? { announcedAt: new Date(command.announcedAt!) } : {}),
       ...("answerLocation" in command ? { answerLocation: command.answerLocation } : {}),
-      ...("identificationCode" in command ? { identificationCode: command.identificationCode } : {}),
+      ...("identificationCode" in command
+        ? {
+            identificationCodeHash: this.identificationCodeService.hash(
+              command.identificationCode!,
+            ),
+          }
+        : {}),
       ...("completionMessage" in command ? { completionMessage: command.completionMessage } : {}),
       ...("clues" in command ? { clues: command.clues } : {}),
       ...("mission" in command ? { mission: command.mission } : {}),

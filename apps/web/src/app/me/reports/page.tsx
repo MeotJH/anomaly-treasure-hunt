@@ -1,9 +1,11 @@
+import { requireSignedIn } from "@/lib/auth";
 import { getMyReportsView } from "@/modules/reports/application/get-my-reports-view";
 import { ReportHistoryList } from "@/modules/reports/presentation/components/report-history-list";
 
 export const dynamic = "force-dynamic";
 
 export default async function MyReportsPage() {
+  await requireSignedIn("/me/reports");
   const reports = await getMyReportsView();
 
   return (

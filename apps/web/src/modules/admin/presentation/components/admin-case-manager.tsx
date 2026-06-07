@@ -1,12 +1,16 @@
 "use client";
 
 import { FormEvent, useEffect, useMemo, useState } from "react";
-import { AdminCaseRecord, CaseClue, MissionInstruction } from "@/modules/cases/domain/case";
 import {
   AdminCasePayload,
+  AdminCaseRecord,
+  CaseClue,
+  MissionInstruction,
+} from "@/modules/cases/domain/case";
+import {
   createAdminCase,
   updateAdminCase,
-} from "@/modules/cases/infrastructure/case-api";
+} from "@/modules/cases/infrastructure/case-admin-browser-api";
 import { StatusBadge } from "@/modules/shared/presentation/components/status-badge";
 
 interface AdminCaseManagerProps {
@@ -97,7 +101,7 @@ function mapCaseToForm(caseItem: AdminCaseRecord): AdminCaseFormState {
     endsAt: isoLocal(caseItem.endsAt),
     announcedAt: isoLocal(caseItem.announcedAt),
     answerLocation: caseItem.answerLocation,
-    identificationCode: caseItem.identificationCode,
+    identificationCode: "",
     completionMessage: caseItem.completionMessage,
     clue1Title: clue1?.title ?? "",
     clue1Content: clue1?.content ?? "",
@@ -142,6 +146,17 @@ function buildPayload(form: AdminCaseFormState): AdminCasePayload {
     clues,
     mission,
   };
+}
+
+function buildUpdatePayload(form: AdminCaseFormState): Partial<AdminCasePayload> {
+  const payload = buildPayload(form);
+
+  if (!payload.identificationCode) {
+    const { identificationCode: _identificationCode, ...rest } = payload;
+    return rest;
+  }
+
+  return payload;
 }
 
 function FieldLabel({ children }: { children: string }) {
@@ -208,7 +223,7 @@ export function AdminCaseManager({
     }
 
     try {
-      const updated = await updateAdminCase(selectedCase.id, buildPayload(form));
+      const updated = await updateAdminCase(selectedCase.id, buildUpdatePayload(form));
       onCasesChange(cases.map((caseItem) => (caseItem.id === updated.id ? updated : caseItem)));
       onSelectedCaseChange(updated.id);
       setForm(mapCaseToForm(updated));
@@ -512,7 +527,17 @@ export function AdminCaseManager({
                 value={form.identificationCode}
                 onChange={(event) => updateForm("identificationCode", event.target.value)}
                 className="w-full rounded-2xl border border-white/10 bg-black/20 px-4 py-3 text-zinc-50 placeholder:text-zinc-500"
+                placeholder={
+                  mode === "edit" && selectedCase?.hasIdentificationCode
+                    ? "변경할 때만 새 코드를 입력"
+                    : "현장 식별 코드"
+                }
               />
+              {mode === "edit" && selectedCase?.hasIdentificationCode ? (
+                <p className="mt-2 text-xs text-zinc-500">
+                  기존 식별 코드는 서버에서만 보관됩니다. 비워두면 현재 코드가 유지됩니다.
+                </p>
+              ) : null}
             </label>
           </div>
 

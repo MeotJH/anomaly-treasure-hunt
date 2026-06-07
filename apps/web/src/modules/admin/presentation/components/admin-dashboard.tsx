@@ -2,13 +2,13 @@
 
 import { useMemo, useState, useTransition } from "react";
 import { AdminCaseRecord, CaseSummary } from "@/modules/cases/domain/case";
-import { updateAdminCase } from "@/modules/cases/infrastructure/case-api";
+import { updateAdminCase } from "@/modules/cases/infrastructure/case-admin-browser-api";
 import {
   fetchAdminReports,
   drawWinner,
   reviewAdminReport,
   updateWinnerReward,
-} from "@/modules/reports/infrastructure/admin-api";
+} from "@/modules/reports/infrastructure/admin-browser-api";
 import {
   AdminWinnerRecord,
   InvestigationReportSnapshot,

@@ -1,5 +1,6 @@
 import { Body, Controller, Get, Inject, Param, Patch, Post, Req } from "@nestjs/common";
 import { Request } from "express";
+import { InvestigationCaseProps } from "../../../cases/domain/entities/case.entity";
 import { CreateAdminCaseUseCase } from "../../application/use-cases/create-admin-case.use-case";
 import { DrawWinnerUseCase } from "../../application/use-cases/draw-winner.use-case";
 import { ListAdminCasesUseCase } from "../../application/use-cases/list-admin-cases.use-case";
@@ -34,16 +35,16 @@ export class AdminController {
 
   @Get("cases")
   async listCases(@Req() request: Request) {
-    requireAdmin(request);
+    await requireAdmin(request);
     const cases = await this.listAdminCasesUseCase.execute();
-    return cases.map((caseItem) => caseItem.toSnapshot());
+    return cases.map((caseItem) => this.toAdminCaseResponse(caseItem.toSnapshot()));
   }
 
   @Post("cases")
   async createCase(@Body() body: CreateAdminCaseDto, @Req() request: Request) {
-    requireAdmin(request);
+    await requireAdmin(request);
     const caseItem = await this.createAdminCaseUseCase.execute(body);
-    return caseItem.toSnapshot();
+    return this.toAdminCaseResponse(caseItem.toSnapshot());
   }
 
   @Patch("cases/:caseId")
@@ -52,14 +53,14 @@ export class AdminController {
     @Body() body: UpdateAdminCaseDto,
     @Req() request: Request,
   ) {
-    requireAdmin(request);
+    await requireAdmin(request);
     const caseItem = await this.updateAdminCaseUseCase.execute(caseId, body);
-    return caseItem.toSnapshot();
+    return this.toAdminCaseResponse(caseItem.toSnapshot());
   }
 
   @Get("cases/:caseId/reports")
   async listCaseReports(@Param("caseId") caseId: string, @Req() request: Request) {
-    requireAdmin(request);
+    await requireAdmin(request);
     return this.listCaseReportsUseCase.execute(caseId);
   }
 
@@ -69,7 +70,7 @@ export class AdminController {
     @Body() body: ReviewReportDto,
     @Req() request: Request,
   ) {
-    requireAdmin(request);
+    await requireAdmin(request);
     return this.reviewReportUseCase.execute(
       reportId,
       body.reviewStatus,
@@ -79,7 +80,7 @@ export class AdminController {
 
   @Post("cases/:caseId/draw")
   async drawWinner(@Param("caseId") caseId: string, @Req() request: Request) {
-    requireAdmin(request);
+    await requireAdmin(request);
     return this.drawWinnerUseCase.execute(caseId);
   }
 
@@ -89,7 +90,16 @@ export class AdminController {
     @Body() body: UpdateWinnerRewardDto,
     @Req() request: Request,
   ) {
-    requireAdmin(request);
+    await requireAdmin(request);
     return this.updateWinnerRewardUseCase.execute(winnerId, body.status);
+  }
+
+  private toAdminCaseResponse(caseItem: InvestigationCaseProps) {
+    const { identificationCodeHash: _identificationCodeHash, ...safeCase } = caseItem;
+
+    return {
+      ...safeCase,
+      hasIdentificationCode: true,
+    };
   }
 }

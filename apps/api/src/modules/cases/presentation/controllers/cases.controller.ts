@@ -1,8 +1,12 @@
-import { Controller, Get, Inject, Param } from "@nestjs/common";
+import { Controller, Get, Inject, Param, Req } from "@nestjs/common";
+import { Request } from "express";
 import { CaseResponseMapper } from "../../application/services/case-response.mapper";
 import { GetCaseDetailUseCase } from "../../application/use-cases/get-case-detail.use-case";
 import { GetCurrentCaseUseCase } from "../../application/use-cases/get-current-case.use-case";
 import { ListCasesUseCase } from "../../application/use-cases/list-cases.use-case";
+import { INVESTIGATION_REPORT_REPOSITORY } from "../../../reports/reports.tokens";
+import { InvestigationReportRepository } from "../../../reports/domain/repositories/investigation-report.repository";
+import { tryGetRequestUser } from "../../../shared/presentation/request-user";
 
 @Controller("api/cases")
 export class CasesController {
@@ -15,6 +19,8 @@ export class CasesController {
     private readonly getCaseDetailUseCase: GetCaseDetailUseCase,
     @Inject(CaseResponseMapper)
     private readonly mapper: CaseResponseMapper,
+    @Inject(INVESTIGATION_REPORT_REPOSITORY)
+    private readonly reportRepository: InvestigationReportRepository,
   ) {}
 
   @Get("current")
@@ -36,9 +42,14 @@ export class CasesController {
   }
 
   @Get(":caseId")
-  async getCaseDetail(@Param("caseId") caseId: string) {
+  async getCaseDetail(@Param("caseId") caseId: string, @Req() request: Request) {
     const now = new Date();
     const caseItem = await this.getCaseDetailUseCase.execute(caseId);
-    return this.mapper.toDetail(caseItem, now);
+    const user = await tryGetRequestUser(request);
+    const userReports = user
+      ? await this.reportRepository.findByCaseAndUser(caseId, user.id)
+      : undefined;
+
+    return this.mapper.toDetail(caseItem, now, userReports);
   }
 }

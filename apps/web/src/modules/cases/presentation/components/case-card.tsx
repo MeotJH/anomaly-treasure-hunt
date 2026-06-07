@@ -1,6 +1,6 @@
-import Link from "next/link";
 import { CaseSummary } from "../../domain/case";
 import { StatusBadge } from "@/modules/shared/presentation/components/status-badge";
+import { GlitchLink } from "@/modules/shared/presentation/components/glitch-link";
 
 export function CaseCard({ caseItem, href }: { caseItem: CaseSummary; href: string }) {
   return (
@@ -22,12 +22,12 @@ export function CaseCard({ caseItem, href }: { caseItem: CaseSummary; href: stri
         <span>열람 등급: {caseItem.accessLevel}</span>
       </div>
       <div className="relative z-10 mt-6">
-        <Link
+        <GlitchLink
           href={href}
           className="signal-chip distressed-button distressed-button-danger px-4 py-2 text-sm font-medium"
         >
           기록 열람
-        </Link>
+        </GlitchLink>
       </div>
     </article>
   );

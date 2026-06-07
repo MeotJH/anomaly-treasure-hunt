@@ -1,4 +1,4 @@
-import { Module } from "@nestjs/common";
+import { Module, forwardRef } from "@nestjs/common";
 import { SharedModule } from "../shared/shared.module";
 import { CasesModule } from "../cases/cases.module";
 import { INVESTIGATION_REPORT_REPOSITORY } from "./reports.tokens";
@@ -10,7 +10,7 @@ import { SqliteInvestigationReportRepository } from "./infrastructure/repositori
 import { ReportsController } from "./presentation/controllers/reports.controller";
 
 @Module({
-  imports: [SharedModule, CasesModule],
+  imports: [SharedModule, forwardRef(() => CasesModule)],
   controllers: [ReportsController],
   providers: [
     IdentificationCodeService,
@@ -23,6 +23,6 @@ import { ReportsController } from "./presentation/controllers/reports.controller
       useExisting: SqliteInvestigationReportRepository,
     },
   ],
-  exports: [INVESTIGATION_REPORT_REPOSITORY],
+  exports: [INVESTIGATION_REPORT_REPOSITORY, IdentificationCodeService],
 })
 export class ReportsModule {}
