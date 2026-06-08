@@ -1,7 +1,7 @@
 import "server-only";
 
+import { getAuthContext } from "@/lib/auth";
 import { isSupabaseConfigured } from "@/lib/supabase/config";
-import { createSupabaseServerClient } from "@/lib/supabase/server";
 
 export async function getServerAuthorizationHeaders(required = false) {
   if (!isSupabaseConfigured()) {
@@ -12,12 +12,9 @@ export async function getServerAuthorizationHeaders(required = false) {
     return {} as Record<string, string>;
   }
 
-  const supabase = await createSupabaseServerClient();
-  const {
-    data: { session },
-  } = await supabase.auth.getSession();
+  const auth = await getAuthContext();
 
-  if (!session?.access_token) {
+  if (!auth.accessToken) {
     if (required) {
       throw new Error("로그인이 필요합니다.");
     }
@@ -26,6 +23,6 @@ export async function getServerAuthorizationHeaders(required = false) {
   }
 
   return {
-    Authorization: `Bearer ${session.access_token}`,
+    Authorization: `Bearer ${auth.accessToken}`,
   } satisfies Record<string, string>;
 }

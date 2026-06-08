@@ -4,6 +4,7 @@ import { isSupabaseConfigured, supabaseConfig } from "./config";
 
 export async function updateSession(request: NextRequest) {
   if (!isSupabaseConfigured()) {
+    console.log("[supabase/middleware] skipped: not configured");
     return NextResponse.next({
       request,
     });
@@ -38,7 +39,18 @@ export async function updateSession(request: NextRequest) {
     },
   );
 
-  await supabase.auth.getUser();
+  const {
+    data: { user },
+    error,
+  } = await supabase.auth.getUser();
+
+  console.log("[supabase/middleware] getUser", {
+    path: request.nextUrl.pathname,
+    hasUser: Boolean(user),
+    email: user?.email ?? null,
+    hasError: Boolean(error),
+    errorMessage: error?.message ?? null,
+  });
 
   return response;
 }

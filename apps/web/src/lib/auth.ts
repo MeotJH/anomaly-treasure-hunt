@@ -1,8 +1,38 @@
 import "server-only";
 
+import { cache } from "react";
 import { redirect } from "next/navigation";
 import { createSupabaseServerClient } from "./supabase/server";
 import { isSupabaseConfigured, supabaseConfig } from "./supabase/config";
+
+const readAuthSnapshot = cache(async () => {
+  if (!isSupabaseConfigured()) {
+    return {
+      user: null,
+      email: null,
+      isAdmin: false,
+      accessToken: null,
+    };
+  }
+
+  const supabase = await createSupabaseServerClient();
+  const [{ data: userData }, { data: sessionData }] = await Promise.all([
+    supabase.auth.getUser(),
+    supabase.auth.getSession(),
+  ]);
+
+  const user = userData.user;
+  const session = sessionData.session;
+  const email = user?.email?.toLowerCase() ?? null;
+  const isAdmin = email === supabaseConfig.adminEmail.toLowerCase();
+
+  return {
+    user,
+    email,
+    isAdmin,
+    accessToken: user ? session?.access_token ?? null : null,
+  };
+});
 
 export async function getAuthContext() {
   if (!isSupabaseConfigured()) {
@@ -14,31 +44,18 @@ export async function getAuthContext() {
     };
   }
 
-  const supabase = await createSupabaseServerClient();
-  const {
-    data: { user },
-  } = await supabase.auth.getUser();
-
-  const email = user?.email?.toLowerCase() ?? null;
-  const isAdmin = email === supabaseConfig.adminEmail.toLowerCase();
-
-  return {
-    user,
-    email,
-    isAdmin,
-    accessToken: user ? (await supabase.auth.getSession()).data.session?.access_token ?? null : null,
-  };
+  return readAuthSnapshot();
 }
 
 export async function requireSignedIn(next = "/") {
   if (!isSupabaseConfigured()) {
-    redirect(`/?next=${encodeURIComponent(next)}`);
+    redirect(`/login?next=${encodeURIComponent(next)}`);
   }
 
   const auth = await getAuthContext();
 
   if (!auth.user) {
-    redirect(`/?next=${encodeURIComponent(next)}`);
+    redirect(`/login?next=${encodeURIComponent(next)}`);
   }
 
   return auth;

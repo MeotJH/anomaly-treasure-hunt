@@ -3,6 +3,7 @@ import { CASE_REPOSITORY } from "../../../cases/cases.tokens";
 import { CaseRepository } from "../../../cases/domain/repositories/case.repository";
 import { INVESTIGATION_REPORT_REPOSITORY } from "../../reports.tokens";
 import { InvestigationReportRepository } from "../../domain/repositories/investigation-report.repository";
+import { EvidencePhotoUrlService } from "../services/evidence-photo-url.service";
 
 @Injectable()
 export class ListMyReportsUseCase {
@@ -11,6 +12,8 @@ export class ListMyReportsUseCase {
     private readonly caseRepository: CaseRepository,
     @Inject(INVESTIGATION_REPORT_REPOSITORY)
     private readonly reportRepository: InvestigationReportRepository,
+    @Inject(EvidencePhotoUrlService)
+    private readonly evidencePhotoUrlService: EvidencePhotoUrlService,
   ) {}
 
   async execute(userId: string) {
@@ -22,13 +25,13 @@ export class ListMyReportsUseCase {
         const caseItem = await this.caseRepository.findById(report.caseId);
         const snapshot = report.toSnapshot();
 
-        return {
+        return this.evidencePhotoUrlService.mapReportSnapshot({
           ...snapshot,
           caseFileNo: caseItem?.fileNo ?? report.caseId,
-          caseTitle: caseItem?.title ?? "삭제되었거나 접근 불가한 사건",
+          caseTitle: caseItem?.title ?? "삭제되었거나 연결 불가한 사건",
           caseStatus: caseItem?.status ?? "closed",
           resultOpen: caseItem ? caseItem.isResultOpen(now) : false,
-        };
+        });
       }),
     );
   }

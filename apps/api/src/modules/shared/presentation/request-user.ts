@@ -1,3 +1,4 @@
+import "../../../load-env";
 import { ForbiddenException, UnauthorizedException } from "@nestjs/common";
 import { createClient } from "@supabase/supabase-js";
 import { Request } from "express";

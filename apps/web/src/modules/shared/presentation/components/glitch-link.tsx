@@ -1,7 +1,7 @@
 "use client";
 
 import Link from "next/link";
-import { useRouter } from "next/navigation";
+import { usePathname, useRouter } from "next/navigation";
 import {
   MouseEvent,
   PropsWithChildren,
@@ -21,8 +21,18 @@ type GlitchLinkProps = PropsWithChildren<{
 
 export function GlitchLink({ children, className, href, ...props }: GlitchLinkProps) {
   const router = useRouter();
+  const pathname = usePathname();
   const [isPending, setIsPending] = useState(false);
   const timeoutRef = useRef<number | null>(null);
+
+  useEffect(() => {
+    setIsPending(false);
+
+    if (timeoutRef.current !== null) {
+      window.clearTimeout(timeoutRef.current);
+      timeoutRef.current = null;
+    }
+  }, [pathname]);
 
   useEffect(() => {
     return () => {
@@ -46,7 +56,7 @@ export function GlitchLink({ children, className, href, ...props }: GlitchLinkPr
 
     event.preventDefault();
 
-    if (isPending) {
+    if (isPending || pathname === href) {
       return;
     }
 
