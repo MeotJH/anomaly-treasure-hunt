@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import { Geist, Geist_Mono } from "next/font/google";
 import "./globals.css";
 import { AppShell } from "@/modules/shared/presentation/components/app-shell";
+import { ToastProvider } from "@/modules/shared/presentation/components/toast-provider";
 
 const geistSans = Geist({
   variable: "--font-geist-sans",
@@ -29,6 +30,7 @@ export default function RootLayout({
       className={`${geistSans.variable} ${geistMono.variable} h-full antialiased`}
     >
       <body className="min-h-full">
+        <ToastProvider />
         <AppShell>{children}</AppShell>
       </body>
     </html>

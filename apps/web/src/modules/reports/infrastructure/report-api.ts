@@ -1,7 +1,7 @@
-import { appConfig, createDemoHeaders } from "@/lib/config";
+import { getServerAuthorizationHeaders } from "@/lib/api/server-auth";
+import { appConfig } from "@/lib/config";
 import {
-  InvestigationReportSnapshot,
-  ReportSubmissionResult,
+  MyInvestigationReportSnapshot,
 } from "../domain/report";
 
 async function readJson<T>(path: string, init?: RequestInit) {
@@ -19,18 +19,9 @@ async function readJson<T>(path: string, init?: RequestInit) {
 }
 
 export async function fetchMyReports() {
-  return readJson<InvestigationReportSnapshot[]>("/api/me/reports", {
-    headers: createDemoHeaders("user"),
-  });
-}
+  const headers = await getServerAuthorizationHeaders(true);
 
-export async function submitCaseReport(caseId: string, payload: { code: string; photoUrl: string }) {
-  return readJson<ReportSubmissionResult>(`/api/cases/${caseId}/report`, {
-    method: "POST",
-    headers: {
-      "Content-Type": "application/json",
-      ...createDemoHeaders("user"),
-    },
-    body: JSON.stringify(payload),
+  return readJson<MyInvestigationReportSnapshot[]>("/api/me/reports", {
+    headers,
   });
 }

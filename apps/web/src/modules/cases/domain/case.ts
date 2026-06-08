@@ -24,12 +24,42 @@ export interface MissionInstruction {
   caution: string;
 }
 
+export interface AdminCasePayload {
+  fileNo: string;
+  title: string;
+  accessLevel: string;
+  status: "draft" | "published" | "closed" | "announced";
+  rewardName: string;
+  summary: string;
+  reportBody: string;
+  safetyNotice: string;
+  startsAt: string;
+  endsAt: string;
+  announcedAt: string;
+  answerLocation: string;
+  identificationCode: string;
+  completionMessage: string;
+  clues: CaseClue[];
+  mission: MissionInstruction;
+}
+
 export interface CaseDetail extends CaseSummary {
   reportBody: string;
   clues: CaseClue[];
   mission: MissionInstruction;
   safetyNotice: string;
   canSubmitReport: boolean;
+  reportAvailability: {
+    state: "open" | "closed" | "approved_locked" | "limit_reached";
+    message: string;
+  };
+  myReportStatus: {
+    submissionCount: number;
+    remainingSubmissionCount: number;
+    hasApprovedReport: boolean;
+    latestReviewStatus: "pending" | "approved" | "rejected" | null;
+    latestSubmittedAt: string | null;
+  };
 }
 
 export interface CaseResult {
@@ -49,7 +79,7 @@ export interface AdminCaseRecord extends CaseSummary {
   reportBody: string;
   safetyNotice: string;
   answerLocation: string;
-  identificationCode: string;
+  hasIdentificationCode: boolean;
   completionMessage: string;
   clues: CaseClue[];
   mission: MissionInstruction;

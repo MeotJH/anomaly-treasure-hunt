@@ -1,7 +1,7 @@
-import Link from "next/link";
 import { ReactNode } from "react";
-import { CaseDetail } from "../../domain/case";
+import { GlitchLink } from "@/modules/shared/presentation/components/glitch-link";
 import { StatusBadge } from "@/modules/shared/presentation/components/status-badge";
+import { CaseDetail } from "../../domain/case";
 
 function Block({ title, children }: { title: string; children: ReactNode }) {
   return (
@@ -35,12 +35,12 @@ export function CaseDetailView({ caseDetail }: { caseDetail: CaseDetail }) {
           <span>열람 등급: {caseDetail.accessLevel}</span>
         </div>
         <div className="relative z-10 mt-8">
-          <Link
+          <GlitchLink
             href={`/cases/${caseDetail.id}/report`}
             className="signal-chip distressed-button distressed-button-danger px-5 py-3 font-medium"
           >
             현장 보고 시작
-          </Link>
+          </GlitchLink>
         </div>
       </section>
 

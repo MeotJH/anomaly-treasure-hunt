@@ -12,6 +12,7 @@ export interface InvestigationReportRepository {
     caseId: string,
     userId: string,
   ): Promise<InvestigationReport | null>;
+  findByCaseAndUser(caseId: string, userId: string): Promise<InvestigationReport[]>;
   findByUserId(userId: string): Promise<InvestigationReport[]>;
   findByCaseId(caseId: string): Promise<InvestigationReport[]>;
   findById(reportId: string): Promise<InvestigationReport | null>;
@@ -25,4 +26,3 @@ export interface InvestigationReportRepository {
   createWinner(winner: WinnerRecord): Promise<void>;
   updateWinnerStatus(winnerId: string, status: RewardStatus, now: Date): Promise<WinnerRecord>;
 }
-

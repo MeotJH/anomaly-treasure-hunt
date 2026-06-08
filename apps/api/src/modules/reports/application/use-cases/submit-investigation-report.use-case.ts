@@ -21,6 +21,13 @@ interface SubmitReportCommand {
   photoUrl: string;
 }
 
+const supabaseUrl = process.env.SUPABASE_URL ?? process.env.NEXT_PUBLIC_SUPABASE_URL ?? "";
+const storageBucket =
+  process.env.SUPABASE_STORAGE_BUCKET ??
+  process.env.NEXT_PUBLIC_SUPABASE_STORAGE_BUCKET ??
+  "evidence-photos";
+const storagePathPrefix = "reports/";
+
 @Injectable()
 export class SubmitInvestigationReportUseCase {
   constructor(
@@ -50,7 +57,7 @@ export class SubmitInvestigationReportUseCase {
     );
 
     if (approvedReport) {
-      throw new ConflictException("이미 승인된 제보가 있어 추가 제출할 수 없습니다.");
+      throw new ConflictException("이미 확인된 제보가 있어 추가 제출할 수 없습니다.");
     }
 
     const submissionCount = await this.reportRepository.countByCaseAndUser(
@@ -66,16 +73,38 @@ export class SubmitInvestigationReportUseCase {
     }
 
     const normalizedCode = this.identificationCodeService.normalize(command.code);
-    const isCodeCorrect =
-      normalizedCode === this.identificationCodeService.normalize(caseItem.identificationCode);
+    const normalizedPhotoUrl = command.photoUrl.trim();
+
+    if (!normalizedCode) {
+      throw new BadRequestException("식별 코드를 비워둘 수 없습니다.");
+    }
+
+    if (!supabaseUrl) {
+      throw new BadRequestException("Supabase 저장소 설정이 올바르지 않습니다.");
+    }
+
+    if (
+      !normalizedPhotoUrl.startsWith(storagePathPrefix) ||
+      !new RegExp(`^${storagePathPrefix}[a-z0-9-]+/[a-z0-9-]+\\.[a-z0-9]+$`, "i").test(
+        normalizedPhotoUrl,
+      )
+    ) {
+      throw new BadRequestException("증거 사진 저장 경로가 올바르지 않습니다.");
+    }
+
+    const normalizedCodeHash = this.identificationCodeService.hash(normalizedCode);
+    const isCodeCorrect = this.identificationCodeService.matches(
+      normalizedCode,
+      caseItem.identificationCodeHash,
+    );
 
     const report = new InvestigationReport({
       id: `report-${Date.now()}-${submissionCount + 1}`,
       caseId: command.caseId,
       userId: command.userId,
-      submittedCode: command.code,
-      normalizedCode,
-      photoUrl: command.photoUrl,
+      submittedCodeMask: this.identificationCodeService.mask(normalizedCode),
+      normalizedCodeHash,
+      photoUrl: normalizedPhotoUrl,
       isCodeCorrect,
       reviewStatus: "pending",
       rejectionReason: null,

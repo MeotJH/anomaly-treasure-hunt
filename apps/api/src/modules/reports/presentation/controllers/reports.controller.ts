@@ -23,7 +23,7 @@ export class ReportsController {
     @Body() body: SubmitReportDto,
     @Req() request: Request,
   ) {
-    const user = getRequestUser(request);
+    const user = await getRequestUser(request);
 
     return this.submitInvestigationReportUseCase.execute({
       caseId,
@@ -35,7 +35,7 @@ export class ReportsController {
 
   @Get("me/reports")
   async listMyReports(@Req() request: Request) {
-    const user = getRequestUser(request);
+    const user = await getRequestUser(request);
     return this.listMyReportsUseCase.execute(user.id);
   }
 

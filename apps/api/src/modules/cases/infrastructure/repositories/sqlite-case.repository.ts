@@ -17,11 +17,11 @@ type CaseRow = {
   summary: string;
   report_body: string;
   safety_notice: string;
-  starts_at: string;
-  ends_at: string;
-  announced_at: string;
-  answer_location: string;
-  identification_code: string;
+      starts_at: string;
+      ends_at: string;
+      announced_at: string;
+      answer_location: string;
+      identification_code: string;
   completion_message: string;
   clues_json: string;
   mission_instruction: string;
@@ -88,7 +88,7 @@ export class SqliteCaseRepository implements CaseRepository {
         snapshot.endsAt.toISOString(),
         snapshot.announcedAt.toISOString(),
         snapshot.answerLocation,
-        snapshot.identificationCode,
+        snapshot.identificationCodeHash,
         snapshot.completionMessage,
         JSON.stringify(snapshot.clues),
         snapshot.mission.instruction,
@@ -148,7 +148,7 @@ export class SqliteCaseRepository implements CaseRepository {
         snapshot.endsAt.toISOString(),
         snapshot.announcedAt.toISOString(),
         snapshot.answerLocation,
-        snapshot.identificationCode,
+        snapshot.identificationCodeHash,
         snapshot.completionMessage,
         JSON.stringify(snapshot.clues),
         snapshot.mission.instruction,
@@ -176,7 +176,7 @@ export class SqliteCaseRepository implements CaseRepository {
       endsAt: new Date(row.ends_at),
       announcedAt: new Date(row.announced_at),
       answerLocation: row.answer_location,
-      identificationCode: row.identification_code,
+      identificationCodeHash: row.identification_code,
       completionMessage: row.completion_message,
       clues: JSON.parse(row.clues_json) as InvestigationCaseProps["clues"],
       mission: {

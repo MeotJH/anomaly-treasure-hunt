@@ -5,6 +5,7 @@ import {
   InvestigationCaseProps,
 } from "../../../cases/domain/entities/case.entity";
 import { CaseRepository } from "../../../cases/domain/repositories/case.repository";
+import { IdentificationCodeService } from "../../../reports/application/services/identification-code.service";
 
 export interface CreateAdminCaseCommand {
   fileNo: string;
@@ -30,6 +31,8 @@ export class CreateAdminCaseUseCase {
   constructor(
     @Inject(CASE_REPOSITORY)
     private readonly caseRepository: CaseRepository,
+    @Inject(IdentificationCodeService)
+    private readonly identificationCodeService: IdentificationCodeService,
   ) {}
 
   async execute(command: CreateAdminCaseCommand) {
@@ -49,7 +52,7 @@ export class CreateAdminCaseUseCase {
       endsAt: new Date(command.endsAt),
       announcedAt: new Date(command.announcedAt),
       answerLocation: command.answerLocation,
-      identificationCode: command.identificationCode,
+      identificationCodeHash: this.identificationCodeService.hash(command.identificationCode),
       completionMessage: command.completionMessage,
       clues: command.clues,
       mission: command.mission,

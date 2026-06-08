@@ -1,31 +1,11 @@
-import { appConfig, createDemoHeaders } from "@/lib/config";
+import { getServerAuthorizationHeaders } from "@/lib/api/server-auth";
+import { appConfig } from "@/lib/config";
 import {
   AdminCaseRecord,
-  CaseClue,
   CaseDetail,
   CaseResult,
   CaseSummary,
-  MissionInstruction,
 } from "../domain/case";
-
-export interface AdminCasePayload {
-  fileNo: string;
-  title: string;
-  accessLevel: string;
-  status: "draft" | "published" | "closed" | "announced";
-  rewardName: string;
-  summary: string;
-  reportBody: string;
-  safetyNotice: string;
-  startsAt: string;
-  endsAt: string;
-  announcedAt: string;
-  answerLocation: string;
-  identificationCode: string;
-  completionMessage: string;
-  clues: CaseClue[];
-  mission: MissionInstruction;
-}
 
 async function readJson<T>(path: string, init?: RequestInit) {
   const response = await fetch(`${appConfig.apiBaseUrl}${path}`, {
@@ -46,50 +26,23 @@ export async function fetchCurrentCase() {
 }
 
 export async function fetchCases() {
-  return readJson<CaseSummary[]>("/api/cases", {
-    headers: createDemoHeaders("user"),
-  });
+  return readJson<CaseSummary[]>("/api/cases");
 }
 
 export async function fetchCaseDetail(caseId: string) {
+  const headers = await getServerAuthorizationHeaders(false);
   return readJson<CaseDetail>(`/api/cases/${caseId}`, {
-    headers: createDemoHeaders("user"),
+    headers,
   });
 }
 
 export async function fetchCaseResult(caseId: string) {
-  return readJson<CaseResult>(`/api/cases/${caseId}/result`, {
-    headers: createDemoHeaders("user"),
-  });
+  return readJson<CaseResult>(`/api/cases/${caseId}/result`);
 }
 
 export async function fetchAdminCases() {
+  const headers = await getServerAuthorizationHeaders(true);
   return readJson<AdminCaseRecord[]>("/api/admin/cases", {
-    headers: createDemoHeaders("admin"),
-  });
-}
-
-export async function createAdminCase(payload: AdminCasePayload) {
-  return readJson<AdminCaseRecord>("/api/admin/cases", {
-    method: "POST",
-    headers: {
-      "Content-Type": "application/json",
-      ...createDemoHeaders("admin"),
-    },
-    body: JSON.stringify(payload),
-  });
-}
-
-export async function updateAdminCase(
-  caseId: string,
-  payload: Partial<AdminCasePayload>,
-) {
-  return readJson<AdminCaseRecord>(`/api/admin/cases/${caseId}`, {
-    method: "PATCH",
-    headers: {
-      "Content-Type": "application/json",
-      ...createDemoHeaders("admin"),
-    },
-    body: JSON.stringify(payload),
+    headers,
   });
 }

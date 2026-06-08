@@ -17,18 +17,17 @@ export default async function Home() {
             </span>
           </h2>
           <p className="mt-5 max-w-2xl text-base leading-8 text-zinc-300">
-            참여자는 퀴즈 풀이자가 아니라 현장 조사자입니다. 기록 문서를 읽고 실제
-            위치를 추적한 뒤, 식별 코드와 현장 증거를 제출해 이상현상의 실체를
-            확인합니다.
+            이 보관소는 도시 곳곳에 남은 비정상 흔적을 수집하는 공개 관측망입니다. 문서를 읽고,
+            단서를 해석한 뒤, 현장에서 확보한 증거를 제출해 기록되지 않은 실체를 복원합니다.
           </p>
         </div>
         <div className="relative z-10 rounded-3xl border border-rose-950/50 bg-black/30 p-6">
-          <p className="text-xs uppercase tracking-[0.28em] text-zinc-500">감시 메모</p>
+          <p className="text-xs uppercase tracking-[0.28em] text-zinc-500">관측 지침</p>
           <ul className="mt-4 space-y-3 text-sm leading-7 text-zinc-300">
-            <li>사건 열람, 단서 추적, 현장 제보까지 MVP 흐름을 한 화면군으로 구성</li>
-            <li>프론트는 Next.js, 백엔드는 Nest.js 기반 TypeScript 워크스페이스</li>
-            <li>레이어 분리: 표현, 애플리케이션, 도메인, 인프라 구조 유지</li>
-            <li>이후 인증, 저장소, 외부 연동은 인프라 계층만 교체하면 확장 가능</li>
+            <li>공개된 사건 문서를 먼저 읽고, 반복되는 문장과 누락된 이름을 단서로 사용합니다.</li>
+            <li>현장을 추정했다면 표식, 안내판, 입구 구조물처럼 장소를 식별할 수 있는 증거를 확보합니다.</li>
+            <li>제출된 사진과 식별 코드는 수동 검토를 거쳐 보존 기록 또는 반려 기록으로 분류됩니다.</li>
+            <li>승인된 보고서는 추첨 대상에 편입되며, 동일 사건에 대한 중복 제보는 별도 확인 절차를 거칩니다.</li>
           </ul>
         </div>
       </section>
@@ -45,7 +44,7 @@ export default async function Home() {
 
       <section className="space-y-4">
         <div>
-          <p className="text-xs uppercase tracking-[0.28em] text-zinc-500">봉인 기록</p>
+          <p className="text-xs uppercase tracking-[0.28em] text-zinc-500">종료 기록</p>
           <h2 className="mt-2 text-2xl font-semibold text-zinc-50">과거 조사 문서</h2>
         </div>
         <div className="grid gap-6 lg:grid-cols-2">

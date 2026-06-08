@@ -1,3 +1,4 @@
+import { requireSignedIn } from "@/lib/auth";
 import { getCaseDetailView } from "@/modules/cases/application/get-case-detail-view";
 import { ReportForm } from "@/modules/reports/presentation/components/report-form";
 
@@ -9,11 +10,12 @@ export default async function ReportPage({
   params: Promise<{ caseId: string }>;
 }) {
   const { caseId } = await params;
+  await requireSignedIn(`/cases/${caseId}/report`);
   const caseDetail = await getCaseDetailView(caseId);
 
   return (
     <div className="grid gap-6 lg:grid-cols-[1.2fr_0.8fr]">
-      <ReportForm caseId={caseId} />
+      <ReportForm caseDetail={caseDetail} />
       <aside className="space-y-6 rounded-[2rem] border border-rose-950/40 bg-[linear-gradient(180deg,rgba(24,11,14,0.94),rgba(10,11,15,0.92))] p-8">
         <div>
           <p className="text-xs uppercase tracking-[0.28em] text-zinc-500">{caseDetail.fileNo}</p>

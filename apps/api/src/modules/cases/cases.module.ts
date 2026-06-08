@@ -1,4 +1,5 @@
-import { Module } from "@nestjs/common";
+import { Module, forwardRef } from "@nestjs/common";
+import { ReportsModule } from "../reports/reports.module";
 import { SharedModule } from "../shared/shared.module";
 import { CASE_REPOSITORY } from "./cases.tokens";
 import { CaseResponseMapper } from "./application/services/case-response.mapper";
@@ -9,7 +10,7 @@ import { SqliteCaseRepository } from "./infrastructure/repositories/sqlite-case.
 import { CasesController } from "./presentation/controllers/cases.controller";
 
 @Module({
-  imports: [SharedModule],
+  imports: [SharedModule, forwardRef(() => ReportsModule)],
   controllers: [CasesController],
   providers: [
     CaseResponseMapper,

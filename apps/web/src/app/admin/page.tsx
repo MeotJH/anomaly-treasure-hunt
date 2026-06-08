@@ -1,9 +1,11 @@
+import { requireAdmin } from "@/lib/auth";
 import { getAdminDashboardView } from "@/modules/admin/application/get-admin-dashboard-view";
 import { AdminDashboard } from "@/modules/admin/presentation/components/admin-dashboard";
 
 export const dynamic = "force-dynamic";
 
 export default async function AdminPage() {
+  await requireAdmin("/admin");
   const { cases, selectedCase, reports } = await getAdminDashboardView();
 
   if (!selectedCase) {
