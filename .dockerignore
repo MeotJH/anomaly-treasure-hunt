@@ -10,3 +10,14 @@ docs
 skills
 agents
 *.log
+
+node_modules
+apps/*/node_modules
+dist
+apps/*/dist
+.git
+.env
+data
+*.sqlite
+*.db
+npm-debug.log
