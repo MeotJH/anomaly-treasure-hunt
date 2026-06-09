@@ -47,6 +47,10 @@ Note:
 - Full setup steps: [docs/auth-setup.md](/Users/eldorado/WorkSpace/anomaly-treasure-hunt/docs/auth-setup.md)
 
 ## Deployment
+- Runtime split:
+  - frontend: Vercel (`apps/web`)
+  - backend API: direct EC2/Lightsail deploy with Docker (`apps/api`)
+  - auth, storage, and related secrets: Supabase
 - Backend deploy notes: [docs/deployment.md](/Users/eldorado/WorkSpace/anomaly-treasure-hunt/docs/deployment.md)
 - Production API URL pattern is `https://anomaly.13.124.77.254.nip.io`
 - Backend deploy scripts: `deploy.sh`, `deploy.bat`

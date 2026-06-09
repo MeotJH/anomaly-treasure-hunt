@@ -17,9 +17,19 @@ export function CaseCard({ caseItem, href }: { caseItem: CaseSummary; href: stri
         <StatusBadge label={caseItem.status} />
       </div>
       <p className="relative z-10 mt-4 text-sm leading-7 text-zinc-300">{caseItem.summary}</p>
-      <div className="relative z-10 mt-5 flex flex-wrap gap-3 text-xs text-zinc-400">
-        <span>보상 기록: {caseItem.rewardName}</span>
-        <span>열람 등급: {caseItem.accessLevel}</span>
+      <div className="relative z-10 mt-6 space-y-3">
+        <div className="reward-record signal-chip">
+          <p className="reward-record-label">REWARD RECORD</p>
+          <p className="reward-record-name" data-text={caseItem.rewardName}>
+            {caseItem.rewardName}
+          </p>
+          <p className="reward-record-note">운영진 승인 후 추첨 대상에 포함됩니다.</p>
+        </div>
+        <div className="flex flex-wrap gap-3 text-xs text-zinc-400">
+          <span className="inline-flex rounded-full border border-white/8 bg-white/[0.03] px-3 py-1">
+            열람 등급: {caseItem.accessLevel}
+          </span>
+        </div>
       </div>
       <div className="relative z-10 mt-6">
         <GlitchLink
