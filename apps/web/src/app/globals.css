@@ -356,6 +356,315 @@ body.is-glitching .archive-terminal-title {
   background-color: rgba(8, 56, 28, 0.42);
 }
 
+.guide-hero,
+.guide-difficulty {
+  position: relative;
+  overflow: hidden;
+  background:
+    radial-gradient(circle at top left, rgba(153, 27, 27, 0.22), transparent 26%),
+    radial-gradient(circle at 78% 24%, rgba(127, 29, 29, 0.22), transparent 18%),
+    linear-gradient(180deg, rgba(31, 10, 14, 0.96), rgba(6, 7, 11, 0.98));
+}
+
+.guide-hero::before,
+.guide-difficulty::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  background:
+    linear-gradient(180deg, transparent 0%, rgba(255, 255, 255, 0.03) 48%, transparent 100%),
+    repeating-linear-gradient(
+      180deg,
+      rgba(255, 255, 255, 0.015) 0,
+      rgba(255, 255, 255, 0.015) 1px,
+      transparent 1px,
+      transparent 4px
+    );
+  opacity: 0.28;
+}
+
+.guide-hero::after,
+.guide-difficulty::after {
+  content: "";
+  position: absolute;
+  inset: 1rem;
+  border: 1px solid rgba(244, 63, 94, 0.16);
+  border-radius: 1.7rem;
+  pointer-events: none;
+}
+
+.guide-rec {
+  position: absolute;
+  right: 2rem;
+  top: 2rem;
+  z-index: 2;
+  color: rgba(251, 113, 133, 0.82);
+  font-size: 0.95rem;
+  font-weight: 600;
+  letter-spacing: 0.04em;
+}
+
+.guide-rec::before {
+  content: "";
+  display: inline-block;
+  width: 0.7rem;
+  height: 0.7rem;
+  margin-right: 0.45rem;
+  border-radius: 9999px;
+  background: rgba(244, 63, 94, 0.72);
+  box-shadow: 0 0 14px rgba(244, 63, 94, 0.45);
+}
+
+.guide-crosshair {
+  position: absolute;
+  right: 15%;
+  top: 15%;
+  width: 15rem;
+  height: 15rem;
+  border: 1px solid rgba(190, 24, 93, 0.24);
+  border-radius: 9999px;
+  opacity: 0.42;
+}
+
+.guide-crosshair::before,
+.guide-crosshair::after {
+  content: "";
+  position: absolute;
+  left: 50%;
+  top: 50%;
+  background: rgba(244, 63, 94, 0.28);
+  transform: translate(-50%, -50%);
+}
+
+.guide-crosshair::before {
+  width: 1px;
+  height: 135%;
+}
+
+.guide-crosshair::after {
+  width: 135%;
+  height: 1px;
+}
+
+.guide-dossier {
+  position: absolute;
+  right: 0;
+  bottom: -1.1rem;
+  width: min(31rem, 100%);
+  aspect-ratio: 1.18;
+}
+
+.guide-dossier-ring {
+  position: absolute;
+  right: 11rem;
+  top: 0.75rem;
+  width: 10rem;
+  height: 10rem;
+  border-radius: 9999px;
+  border: 1px solid rgba(190, 24, 93, 0.18);
+  box-shadow:
+    0 0 0 1.5rem rgba(190, 24, 93, 0.04),
+    0 0 0 3rem rgba(190, 24, 93, 0.02);
+}
+
+.guide-dossier-card {
+  position: absolute;
+  right: 0;
+  bottom: 0;
+  width: 22rem;
+  transform: rotate(-4deg);
+  border: 1px solid rgba(250, 204, 21, 0.12);
+  border-radius: 1.75rem;
+  padding: 1.35rem;
+  background:
+    linear-gradient(180deg, rgba(87, 48, 34, 0.72), rgba(39, 22, 22, 0.92)),
+    repeating-linear-gradient(
+      180deg,
+      rgba(255, 255, 255, 0.02) 0,
+      rgba(255, 255, 255, 0.02) 1px,
+      transparent 1px,
+      transparent 4px
+    );
+  box-shadow:
+    0 20px 50px rgba(0, 0, 0, 0.35),
+    inset 0 1px 0 rgba(255, 255, 255, 0.04);
+}
+
+.guide-divider {
+  position: relative;
+  height: 2rem;
+}
+
+.guide-divider::before {
+  content: "";
+  position: absolute;
+  left: 0;
+  right: 0;
+  top: 50%;
+  border-top: 1px solid rgba(244, 63, 94, 0.18);
+}
+
+.guide-divider-eye {
+  position: absolute;
+  left: 50%;
+  top: 50%;
+  width: 3.5rem;
+  height: 3.5rem;
+  transform: translate(-50%, -50%);
+  border-radius: 9999px;
+  border: 1px solid rgba(244, 63, 94, 0.26);
+  background: rgba(7, 8, 12, 0.94);
+}
+
+.guide-divider-eye::before {
+  content: "";
+  position: absolute;
+  left: 50%;
+  top: 50%;
+  width: 1.2rem;
+  height: 1.2rem;
+  transform: translate(-50%, -50%);
+  border-radius: 9999px;
+  border: 1px solid rgba(253, 164, 175, 0.6);
+}
+
+.guide-divider-eye::after {
+  content: "";
+  position: absolute;
+  left: 50%;
+  top: 50%;
+  width: 0.32rem;
+  height: 0.32rem;
+  transform: translate(-50%, -50%);
+  border-radius: 9999px;
+  background: rgba(253, 164, 175, 0.92);
+  box-shadow: 0 0 12px rgba(253, 164, 175, 0.45);
+}
+
+.guide-line {
+  position: relative;
+  height: 1.2rem;
+}
+
+.guide-line::before {
+  content: "";
+  position: absolute;
+  left: 0;
+  right: 0;
+  top: 50%;
+  border-top: 1px solid rgba(244, 63, 94, 0.26);
+}
+
+.guide-line::after {
+  content: "";
+  position: absolute;
+  left: 50%;
+  top: 50%;
+  width: 0.8rem;
+  height: 0.8rem;
+  transform: translate(-50%, -50%) rotate(45deg);
+  border: 1px solid rgba(244, 63, 94, 0.4);
+  background: rgba(7, 8, 12, 0.92);
+}
+
+.guide-orb {
+  position: relative;
+  width: 11rem;
+  height: 11rem;
+  border-radius: 9999px;
+  background:
+    radial-gradient(circle, rgba(244, 63, 94, 0.1), transparent 58%),
+    linear-gradient(180deg, rgba(35, 11, 14, 0.94), rgba(9, 10, 14, 0.96));
+  border: 1px solid rgba(244, 63, 94, 0.12);
+  box-shadow:
+    inset 0 0 0 1rem rgba(244, 63, 94, 0.02),
+    0 0 30px rgba(244, 63, 94, 0.08);
+}
+
+.guide-orb::before,
+.guide-orb::after {
+  content: "";
+  position: absolute;
+  inset: 0.9rem;
+  border-radius: 9999px;
+  border: 1px solid rgba(244, 63, 94, 0.12);
+}
+
+.guide-orb::after {
+  inset: 2rem;
+}
+
+.guide-orb-core {
+  position: absolute;
+  inset: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.guide-radar {
+  position: relative;
+  width: 10rem;
+  height: 10rem;
+  flex: 0 0 auto;
+  border-radius: 9999px;
+  border: 1px solid rgba(255, 255, 255, 0.12);
+  background:
+    radial-gradient(circle, rgba(255, 255, 255, 0.06), transparent 52%),
+    linear-gradient(180deg, rgba(18, 11, 14, 0.95), rgba(7, 8, 12, 0.96));
+  overflow: hidden;
+}
+
+.guide-radar::before,
+.guide-radar::after {
+  content: "";
+  position: absolute;
+  inset: 1rem;
+  border-radius: 9999px;
+  border: 1px solid currentColor;
+  opacity: 0.24;
+}
+
+.guide-radar::after {
+  inset: 2.2rem;
+}
+
+.guide-radar-low {
+  color: rgba(74, 222, 128, 0.8);
+  box-shadow: 0 0 28px rgba(74, 222, 128, 0.12);
+}
+
+.guide-radar-medium {
+  color: rgba(251, 191, 36, 0.8);
+  box-shadow: 0 0 28px rgba(251, 191, 36, 0.12);
+}
+
+.guide-radar-high {
+  color: rgba(251, 113, 133, 0.8);
+  box-shadow: 0 0 28px rgba(251, 113, 133, 0.12);
+}
+
+.guide-radar-low::selection,
+.guide-radar-medium::selection,
+.guide-radar-high::selection {
+  background: transparent;
+}
+
+@media (max-width: 1023px) {
+  .guide-dossier {
+    position: relative;
+    right: auto;
+    bottom: auto;
+    margin-left: auto;
+    width: min(24rem, 100%);
+  }
+
+  .guide-dossier-card {
+    width: 100%;
+  }
+}
+
 @keyframes glitch-base {
   0%,
   84%,
