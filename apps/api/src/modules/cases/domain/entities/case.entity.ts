@@ -19,6 +19,7 @@ export interface InvestigationCaseProps {
   title: string;
   episodeNo: number;
   difficultyGrade: DifficultyGrade;
+  representativeImageUrl: string | null;
   accessLevel: string;
   status: CaseStatus;
   rewardName: string;
@@ -56,6 +57,10 @@ export class InvestigationCase {
 
   get difficultyGrade() {
     return this.props.difficultyGrade;
+  }
+
+  get representativeImageUrl() {
+    return this.props.representativeImageUrl;
   }
 
   get status() {

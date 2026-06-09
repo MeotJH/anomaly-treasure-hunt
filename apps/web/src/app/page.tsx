@@ -1,8 +1,7 @@
 import { getHomePageData } from "@/modules/home/application/get-home-page-data";
 import { CaseCard } from "@/modules/cases/presentation/components/case-card";
 import { ArchiveCaseCard } from "@/modules/home/presentation/components/archive-case-card";
-import { HomeHero } from "@/modules/home/presentation/components/home-hero";
-import { ParticipationSteps } from "@/modules/home/presentation/components/participation-steps";
+import { GlitchLink } from "@/modules/shared/presentation/components/glitch-link";
 
 export const dynamic = "force-dynamic";
 
@@ -11,7 +10,25 @@ export default async function Home() {
 
   return (
     <div className="space-y-10">
-      <HomeHero />
+      <section className="haunted-panel rounded-[1.75rem] border border-rose-900/30 bg-[linear-gradient(180deg,rgba(21,11,14,0.92),rgba(9,10,14,0.94))] p-5">
+        <p className="max-w-3xl text-sm leading-7 text-zinc-300">
+          공개 문서는 위치가 제거된 이상현상 사건 기록이다. 단서와 누락 정보를 대조해 실제 장소를 추정한다. 현장 사진과 식별 코드가 확보되면 제보 기록이 성립한다
+        </p>
+        <div className="mt-5 flex flex-wrap gap-3">
+          <GlitchLink
+            href="#active-case"
+            className="signal-chip distressed-button distressed-button-danger px-5 py-3 text-sm font-medium"
+          >
+            공개 사건 보기
+          </GlitchLink>
+          <GlitchLink
+            href="/guide"
+            className="signal-chip distressed-button distressed-button-neutral px-5 py-3 text-sm font-medium"
+          >
+            관측 안내
+          </GlitchLink>
+        </div>
+      </section>
 
       {currentCase ? (
         <section id="active-case" className="space-y-4">
@@ -26,9 +43,6 @@ export default async function Home() {
           <CaseCard caseItem={currentCase} href={`/cases/${currentCase.id}`} />
         </section>
       ) : null}
-
-      <ParticipationSteps />
-
       <section className="space-y-4">
         <div>
           <p className="text-xs uppercase tracking-[0.28em] text-zinc-500">종료 기록</p>
@@ -42,40 +56,6 @@ export default async function Home() {
             <ArchiveCaseCard key={caseItem.id} caseItem={caseItem} />
           ))}
         </div>
-      </section>
-
-      <section className="haunted-panel rounded-[1.8rem] border border-white/8 bg-[linear-gradient(180deg,rgba(16,11,14,0.94),rgba(8,10,14,0.92))] p-6">
-        <details className="group relative z-10">
-          <summary className="flex cursor-pointer list-none items-center justify-between gap-4 text-left">
-            <div>
-              <p className="text-xs uppercase tracking-[0.28em] text-zinc-500">운영 지침</p>
-              <h2 className="mt-2 text-2xl font-semibold text-zinc-50">이 사이트는 무엇을 하는 곳인가요?</h2>
-            </div>
-            <span className="rounded-full border border-white/10 bg-white/5 px-3 py-1 text-xs text-zinc-300 transition group-open:rotate-180">
-              펼치기
-            </span>
-          </summary>
-          <div className="mt-5 grid gap-4 text-sm leading-7 text-zinc-300 lg:grid-cols-3">
-            <div className="rounded-[1.25rem] border border-white/8 bg-black/15 p-4">
-              <h3 className="font-semibold text-zinc-100">관측 절차</h3>
-              <p className="mt-2">
-                사건 문서를 읽고 단서를 추적한 뒤, 실제 장소를 특정해 현장 증거를 확보합니다.
-              </p>
-            </div>
-            <div className="rounded-[1.25rem] border border-white/8 bg-black/15 p-4">
-              <h3 className="font-semibold text-zinc-100">증거 기준</h3>
-              <p className="mt-2">
-                장소를 식별할 수 있는 표식, 구조물, 안내판이 포함된 사진과 식별 코드가 필요합니다.
-              </p>
-            </div>
-            <div className="rounded-[1.25rem] border border-white/8 bg-black/15 p-4">
-              <h3 className="font-semibold text-zinc-100">검토 방식</h3>
-              <p className="mt-2">
-                모든 제보는 수동 검토를 거치며, 승인된 제보만 추첨 대상에 포함됩니다.
-              </p>
-            </div>
-          </div>
-        </details>
       </section>
     </div>
   );

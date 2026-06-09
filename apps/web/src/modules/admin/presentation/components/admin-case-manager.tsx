@@ -25,6 +25,7 @@ interface AdminCaseFormState {
   fileNo: string;
   title: string;
   difficultyGrade: DifficultyGrade;
+  representativeImageUrl: string;
   accessLevel: string;
   status: "draft" | "published" | "closed" | "announced";
   rewardName: string;
@@ -64,6 +65,7 @@ function buildDefaultForm(): AdminCaseFormState {
     fileNo: "",
     title: "",
     difficultyGrade: "D",
+    representativeImageUrl: "",
     accessLevel: "공개 관측",
     status: "draft",
     rewardName: "",
@@ -95,6 +97,7 @@ function mapCaseToForm(caseItem: AdminCaseRecord): AdminCaseFormState {
     fileNo: caseItem.fileNo,
     title: caseItem.title,
     difficultyGrade: caseItem.difficultyGrade,
+    representativeImageUrl: caseItem.representativeImageUrl ?? "",
     accessLevel: caseItem.accessLevel,
     status: caseItem.status as AdminCaseFormState["status"],
     rewardName: caseItem.rewardName,
@@ -136,6 +139,7 @@ function buildPayload(form: AdminCaseFormState): AdminCasePayload {
     fileNo: form.fileNo.trim(),
     title: form.title.trim(),
     difficultyGrade: form.difficultyGrade,
+    representativeImageUrl: form.representativeImageUrl.trim(),
     accessLevel: form.accessLevel.trim(),
     status: form.status,
     rewardName: form.rewardName.trim(),
@@ -368,6 +372,19 @@ export function AdminCaseManager({
               className="w-full rounded-2xl border border-white/10 bg-black/20 px-4 py-3 text-zinc-50 placeholder:text-zinc-500"
               placeholder="현상을 식별할 제목"
             />
+          </label>
+
+          <label className="block">
+            <FieldLabel>대표사진 경로</FieldLabel>
+            <input
+              value={form.representativeImageUrl}
+              onChange={(event) => updateForm("representativeImageUrl", event.target.value)}
+              className="w-full rounded-2xl border border-white/10 bg-black/20 px-4 py-3 text-zinc-50 placeholder:text-zinc-500"
+              placeholder="/anormal_pic1.png 또는 https://..."
+            />
+            <p className="mt-2 text-xs text-zinc-500">
+              비워두면 기본 대표 이미지가 자동으로 배정됩니다.
+            </p>
           </label>
 
           <div className="grid gap-4 md:grid-cols-3">

@@ -35,13 +35,23 @@ export function CaseDetailView({ caseDetail }: { caseDetail: CaseDetail }) {
           <StatusBadge label={caseDetail.status} />
         </div>
 
-        <div className="relative z-10 mt-8 flex flex-wrap gap-3 text-sm text-zinc-400">
-          <DifficultyBadge grade={caseDetail.difficultyGrade} />
-          <span className="rounded-full border border-white/10 bg-white/5 px-3 py-1 text-xs text-zinc-300">
-            {difficulty.summary}
-          </span>
-          <span>보상 기록: {caseDetail.rewardName}</span>
-          <span>열람 등급: {caseDetail.accessLevel}</span>
+        <div className="relative z-10 mt-8 space-y-3">
+          <div className="flex flex-wrap gap-3 text-sm text-zinc-400">
+            <DifficultyBadge grade={caseDetail.difficultyGrade} />
+            <span className="rounded-full border border-white/10 bg-white/5 px-3 py-1 text-xs text-zinc-300">
+              {difficulty.summary}
+            </span>
+            <span className="inline-flex rounded-full border border-white/10 bg-white/5 px-3 py-1 text-xs text-zinc-300">
+              열람 등급: {caseDetail.accessLevel}
+            </span>
+          </div>
+          <div className="reward-record signal-chip max-w-2xl">
+            <p className="reward-record-label">REWARD RECORD</p>
+            <p className="reward-record-name" data-text={caseDetail.rewardName}>
+              {caseDetail.rewardName}
+            </p>
+            <p className="reward-record-note">운영진 승인 후 추첨 대상에 포함됩니다.</p>
+          </div>
         </div>
 
         <div className="relative z-10 mt-8 flex flex-wrap gap-3">

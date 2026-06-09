@@ -43,6 +43,10 @@ export class UpdateAdminCaseDto {
 
   @IsOptional()
   @IsString()
+  representativeImageUrl?: string;
+
+  @IsOptional()
+  @IsString()
   accessLevel?: string;
 
   @IsOptional()

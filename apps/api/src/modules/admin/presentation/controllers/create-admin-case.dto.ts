@@ -6,6 +6,7 @@ import {
   IsIn,
   IsNotEmpty,
   IsNumber,
+  IsOptional,
   IsString,
   ValidateNested,
 } from "class-validator";
@@ -49,6 +50,10 @@ export class CreateAdminCaseDto {
 
   @IsIn(["F", "E", "D", "C", "B", "A", "S"])
   difficultyGrade!: "F" | "E" | "D" | "C" | "B" | "A" | "S";
+
+  @IsOptional()
+  @IsString()
+  representativeImageUrl?: string;
 
   @IsString()
   @IsNotEmpty()

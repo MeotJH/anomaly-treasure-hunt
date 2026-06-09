@@ -23,11 +23,18 @@ const thumbnailTheme = {
 
 type Variant = "featured" | "compact";
 
+const fallbackImageCount = 4;
+
+function resolveFallbackImage() {
+  const randomIndex = Math.floor(Math.random() * fallbackImageCount) + 1;
+  return `/anormal_pic${randomIndex}.png`;
+}
+
 export function CaseThumbnail({
   caseItem,
   variant = "featured",
 }: {
-  caseItem: Pick<CaseSummary, "fileNo" | "title">;
+  caseItem: Pick<CaseSummary, "fileNo" | "title" | "representativeImageUrl">;
   variant?: Variant;
 }) {
   const theme = thumbnailTheme[caseItem.fileNo as keyof typeof thumbnailTheme] ?? {
@@ -36,26 +43,34 @@ export function CaseThumbnail({
     accent: "from-rose-300/60 via-sky-300/25 to-zinc-200/35",
     label: "기록 보관 이미지",
   };
+  const imageSrc = caseItem.representativeImageUrl?.trim() || resolveFallbackImage();
 
-  const sizeClass = variant === "featured" ? "aspect-[16/9]" : "aspect-[4/3]";
-  const titleClass = variant === "featured" ? "text-lg sm:text-xl" : "text-sm";
+  const sizeClass = variant === "featured" ? "aspect-[4/3] lg:aspect-[5/4]" : "aspect-[4/3]";
 
   return (
     <div
       className={`relative overflow-hidden rounded-[1.35rem] border border-white/10 ${sizeClass}`}
       style={{ background: theme.background }}
     >
+      <img
+        src={imageSrc}
+        alt={`${caseItem.title} 대표 이미지`}
+        className="absolute inset-0 h-full w-full object-cover opacity-70"
+      />
+      <div className="absolute inset-0 bg-[radial-gradient(circle_at_center,transparent_42%,rgba(7,8,12,0.18)_68%,rgba(7,8,12,0.46)_100%)]" />
+      <div className="absolute inset-0 bg-[linear-gradient(180deg,rgba(7,8,12,0.28)_0%,transparent_18%,transparent_72%,rgba(7,8,12,0.54)_100%),linear-gradient(90deg,rgba(7,8,12,0.4)_0%,transparent_14%,transparent_86%,rgba(7,8,12,0.4)_100%)]" />
+      <div className="absolute inset-0 bg-[linear-gradient(180deg,rgba(9,10,14,0.08),rgba(8,10,14,0.18)_35%,rgba(0,0,0,0.58)_100%)]" />
       <div className="absolute inset-0 bg-[linear-gradient(180deg,rgba(255,255,255,0.02),transparent_32%,rgba(0,0,0,0.35)_100%)]" />
       <div className="absolute inset-0 bg-[repeating-linear-gradient(180deg,rgba(255,255,255,0.04)_0,rgba(255,255,255,0.04)_1px,transparent_1px,transparent_4px)] opacity-20" />
       <div className={`absolute left-4 top-4 h-px w-24 bg-gradient-to-r ${theme.accent}`} />
+      <div className="absolute left-4 top-7 rounded-full border border-white/10 bg-black/25 px-3 py-1 text-[0.58rem] uppercase tracking-[0.28em] text-zinc-200">
+        {caseItem.fileNo}
+      </div>
       <div className="absolute right-4 top-4 rounded-full border border-white/10 bg-black/25 px-3 py-1 text-[0.6rem] uppercase tracking-[0.28em] text-zinc-300">
         anomaly trace
       </div>
       <div className="absolute bottom-0 left-0 right-0 p-4">
-        <p className="text-[0.63rem] uppercase tracking-[0.32em] text-zinc-400">{theme.label}</p>
-        <p className={`mt-2 max-w-[18rem] font-semibold leading-tight text-zinc-50 ${titleClass}`}>
-          {caseItem.title}
-        </p>
+        <p className="text-[0.63rem] uppercase tracking-[0.32em] text-zinc-300">{theme.label}</p>
       </div>
     </div>
   );

@@ -12,6 +12,7 @@ export class CaseResponseMapper {
       episodeNo: caseItem.episodeNo,
       status: caseItem.status,
       difficultyGrade: caseItem.difficultyGrade,
+      representativeImageUrl: caseItem.representativeImageUrl,
       accessLevel: caseItem.accessLevel,
       rewardName: caseItem.rewardName,
       summary: caseItem.summary,

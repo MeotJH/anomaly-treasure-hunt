@@ -7,6 +7,7 @@ import { IdentificationCodeService } from "../../../reports/application/services
 export type UpdateAdminCaseCommand = Partial<{
   title: string;
   difficultyGrade: InvestigationCaseProps["difficultyGrade"];
+  representativeImageUrl: string;
   accessLevel: string;
   status: InvestigationCaseProps["status"];
   rewardName: string;
@@ -42,6 +43,9 @@ export class UpdateAdminCaseUseCase {
     return this.caseRepository.update(caseId, {
       ...("title" in command ? { title: command.title } : {}),
       ...("difficultyGrade" in command ? { difficultyGrade: command.difficultyGrade } : {}),
+      ...("representativeImageUrl" in command
+        ? { representativeImageUrl: command.representativeImageUrl?.trim() || null }
+        : {}),
       ...("accessLevel" in command ? { accessLevel: command.accessLevel } : {}),
       ...("status" in command ? { status: command.status } : {}),
       ...("rewardName" in command ? { rewardName: command.rewardName } : {}),

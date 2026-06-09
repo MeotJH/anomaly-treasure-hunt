@@ -212,8 +212,9 @@ export default function GuidePage() {
                     <div className="mt-2 h-2 w-20 rounded-full bg-white/6" />
                     <div className="mt-7 rounded-2xl border border-rose-500/25 bg-black/20 p-4">
                       <p className="text-xs uppercase tracking-[0.28em] text-rose-200/60">Reward Record</p>
-                      <p className="mt-2 text-lg font-semibold text-amber-50">치킨 기프티콘 추첨권</p>
-                      <p className="mt-2 text-xs text-amber-200/70">운영진 승인 후 추첨 대상에 포함됩니다.</p>
+                      <p className="mt-2 text-lg font-semibold text-amber-50">이상현상 접촉 보상권</p>
+                      <p className="mt-2 text-xs text-amber-200/70">기록 관리자 검토 후 보상 배정 명부에</p>
+                      <p className="mt-2 text-xs text-amber-200/70">편입됩니다.</p>
                     </div>
                   </div>
                   <div className="rounded-[1.4rem] border border-white/10 bg-black/30" />
