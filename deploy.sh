@@ -5,7 +5,7 @@ ROOT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 
 BACKEND_HOST="${BACKEND_HOST:-13.124.77.254}"
 BACKEND_USER="${BACKEND_USER:-ec2-user}"
-SSH_KEY_PATH="${SSH_KEY_PATH:-$ROOT_DIR/../chickenmap/LightsailDefaultKey-ap-northeast-2.pem}"
+SSH_KEY_PATH="${SSH_KEY_PATH:-$ROOT_DIR/../cafemap/LightsailDefaultKey-ap-northeast-2.pem}"
 BACKEND_REMOTE_DIR="${BACKEND_REMOTE_DIR:-/home/ec2-user/anomaly-treasure-hunt-api}"
 REMOTE_GIT_URL="${REMOTE_GIT_URL:-https://github.com/MeotJH/anomaly-treasure-hunt.git}"
 REMOTE_GIT_BRANCH="${REMOTE_GIT_BRANCH:-master}"
@@ -14,6 +14,7 @@ BACKEND_IMAGE_NAME="${BACKEND_IMAGE_NAME:-anomaly-treasure-hunt-api:latest}"
 BACKEND_PORT_BIND="${BACKEND_PORT_BIND:-2028:4000}"
 BACKEND_PUBLIC_URL="${BACKEND_PUBLIC_URL:-https://anomaly.${BACKEND_HOST}.nip.io}"
 CADDYFILE_PATH="${CADDYFILE_PATH:-/home/ec2-user/caddy/Caddyfile}"
+CADDY_CONTAINER_NAME="${CADDY_CONTAINER_NAME:-chickenmap-caddy}"
 CONFIGURE_BACKEND_URL="${CONFIGURE_BACKEND_URL:-true}"
 UPLOAD_BACKEND_ENV="${UPLOAD_BACKEND_ENV:-false}"
 SKIP_API_LINT="${SKIP_API_LINT:-false}"
@@ -38,6 +39,7 @@ Env overrides:
   BACKEND_PORT_BIND
   BACKEND_PUBLIC_URL
   CADDYFILE_PATH
+  CADDY_CONTAINER_NAME
   CONFIGURE_BACKEND_URL=true|false
   UPLOAD_BACKEND_ENV=true|false
   SKIP_API_LINT=true|false
@@ -137,14 +139,14 @@ if [[ "$CONFIGURE_BACKEND_URL" == true ]]; then
     mkdir -p \"\$(dirname '${CADDYFILE_PATH}')\"
     touch '${CADDYFILE_PATH}'
     if ! grep -q 'anomaly.${BACKEND_HOST}.nip.io' '${CADDYFILE_PATH}'; then
-      cat <<'EOF' >> '${CADDYFILE_PATH}'
+      cat <<EOF >> '${CADDYFILE_PATH}'
 
-anomaly.3.36.208.227.nip.io, anomaly.13.124.77.254.nip.io {
+${BACKEND_PUBLIC_URL#https://} {
     reverse_proxy host.docker.internal:2028
 }
 EOF
     fi
-    docker exec chickenmap-caddy caddy reload --config /etc/caddy/Caddyfile
+    docker exec '${CADDY_CONTAINER_NAME}' caddy reload --config /etc/caddy/Caddyfile
   "
 fi
 

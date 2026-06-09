@@ -38,6 +38,14 @@ export class UpdateAdminCaseDto {
   title?: string;
 
   @IsOptional()
+  @IsIn(["F", "E", "D", "C", "B", "A", "S"])
+  difficultyGrade?: "F" | "E" | "D" | "C" | "B" | "A" | "S";
+
+  @IsOptional()
+  @IsString()
+  representativeImageUrl?: string;
+
+  @IsOptional()
   @IsString()
   accessLevel?: string;
 

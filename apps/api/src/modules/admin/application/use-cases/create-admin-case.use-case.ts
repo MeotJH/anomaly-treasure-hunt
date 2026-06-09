@@ -10,6 +10,8 @@ import { IdentificationCodeService } from "../../../reports/application/services
 export interface CreateAdminCaseCommand {
   fileNo: string;
   title: string;
+  difficultyGrade: InvestigationCaseProps["difficultyGrade"];
+  representativeImageUrl?: string;
   accessLevel: string;
   status: InvestigationCaseProps["status"];
   rewardName: string;
@@ -42,6 +44,8 @@ export class CreateAdminCaseUseCase {
       fileNo: command.fileNo,
       title: command.title,
       episodeNo: existingCases.length + 1,
+      difficultyGrade: command.difficultyGrade,
+      representativeImageUrl: command.representativeImageUrl?.trim() || null,
       accessLevel: command.accessLevel,
       status: command.status,
       rewardName: command.rewardName,

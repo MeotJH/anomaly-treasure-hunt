@@ -11,7 +11,12 @@ The current default path is Google login only.
 
 ## 1. Fill Environment Variables
 
-Put these into `.env` at the repository root.
+For local development, put these into `.env` at the repository root.
+
+For production:
+
+- backend server: put the backend runtime values into the server-side `.env`
+- frontend on Vercel: set only the frontend variables in the Vercel project settings
 
 ```env
 NEXT_PUBLIC_API_BASE_URL=http://localhost:4000
@@ -53,7 +58,7 @@ http://localhost:3000/auth/callback
 Production:
 
 ```txt
-https://your-domain.com/auth/callback
+https://your-vercel-domain.vercel.app/auth/callback
 ```
 
 If you use Vercel preview URLs, add them later as needed.
@@ -148,6 +153,7 @@ http://localhost:3000
   Check:
   - Supabase redirect allow list
   - provider callback URL
+  - Vercel production domain matches `NEXT_PUBLIC_API_BASE_URL` and callback settings
   - `NEXT_PUBLIC_SUPABASE_URL`
   - `NEXT_PUBLIC_SUPABASE_PUBLISHABLE_KEY`
 

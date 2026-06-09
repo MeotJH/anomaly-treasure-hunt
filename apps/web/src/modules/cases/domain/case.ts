@@ -4,6 +4,8 @@ export interface CaseSummary {
   title: string;
   episodeNo: number;
   status: string;
+  difficultyGrade: "F" | "E" | "D" | "C" | "B" | "A" | "S";
+  representativeImageUrl: string | null;
   accessLevel: string;
   rewardName: string;
   summary: string;
@@ -27,6 +29,8 @@ export interface MissionInstruction {
 export interface AdminCasePayload {
   fileNo: string;
   title: string;
+  difficultyGrade: "F" | "E" | "D" | "C" | "B" | "A" | "S";
+  representativeImageUrl?: string;
   accessLevel: string;
   status: "draft" | "published" | "closed" | "announced";
   rewardName: string;

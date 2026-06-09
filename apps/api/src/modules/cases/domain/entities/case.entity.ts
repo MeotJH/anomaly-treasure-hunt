@@ -1,4 +1,5 @@
 export type CaseStatus = "draft" | "published" | "closed" | "announced";
+export type DifficultyGrade = "F" | "E" | "D" | "C" | "B" | "A" | "S";
 
 export interface CaseClue {
   order: number;
@@ -17,6 +18,8 @@ export interface InvestigationCaseProps {
   fileNo: string;
   title: string;
   episodeNo: number;
+  difficultyGrade: DifficultyGrade;
+  representativeImageUrl: string | null;
   accessLevel: string;
   status: CaseStatus;
   rewardName: string;
@@ -50,6 +53,14 @@ export class InvestigationCase {
 
   get episodeNo() {
     return this.props.episodeNo;
+  }
+
+  get difficultyGrade() {
+    return this.props.difficultyGrade;
+  }
+
+  get representativeImageUrl() {
+    return this.props.representativeImageUrl;
   }
 
   get status() {

@@ -11,6 +11,8 @@ type CaseRow = {
   file_no: string;
   title: string;
   episode_no: number;
+  difficulty_grade: InvestigationCaseProps["difficultyGrade"];
+  representative_image_url: string | null;
   access_level: string;
   status: InvestigationCaseProps["status"];
   reward_name: string;
@@ -67,17 +69,19 @@ export class SqliteCaseRepository implements CaseRepository {
     this.sqliteDatabase.connection
       .prepare(`
         INSERT INTO cases (
-          id, file_no, title, episode_no, access_level, status, reward_name, summary,
+          id, file_no, title, episode_no, difficulty_grade, representative_image_url, access_level, status, reward_name, summary,
           report_body, safety_notice, starts_at, ends_at, announced_at, answer_location,
           identification_code, completion_message, clues_json, mission_instruction,
           mission_photo_requirement, mission_caution
-        ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
+        ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
       `)
       .run(
         snapshot.id,
         snapshot.fileNo,
         snapshot.title,
         snapshot.episodeNo,
+        snapshot.difficultyGrade,
+        snapshot.representativeImageUrl,
         snapshot.accessLevel,
         snapshot.status,
         snapshot.rewardName,
@@ -116,6 +120,8 @@ export class SqliteCaseRepository implements CaseRepository {
           file_no = ?,
           title = ?,
           episode_no = ?,
+          difficulty_grade = ?,
+          representative_image_url = ?,
           access_level = ?,
           status = ?,
           reward_name = ?,
@@ -138,6 +144,8 @@ export class SqliteCaseRepository implements CaseRepository {
         snapshot.fileNo,
         snapshot.title,
         snapshot.episodeNo,
+        snapshot.difficultyGrade,
+        snapshot.representativeImageUrl,
         snapshot.accessLevel,
         snapshot.status,
         snapshot.rewardName,
@@ -166,6 +174,8 @@ export class SqliteCaseRepository implements CaseRepository {
       fileNo: row.file_no,
       title: row.title,
       episodeNo: row.episode_no,
+      difficultyGrade: row.difficulty_grade,
+      representativeImageUrl: row.representative_image_url,
       accessLevel: row.access_level,
       status: row.status,
       rewardName: row.reward_name,

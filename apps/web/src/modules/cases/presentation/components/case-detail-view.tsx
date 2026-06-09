@@ -2,6 +2,8 @@ import { ReactNode } from "react";
 import { GlitchLink } from "@/modules/shared/presentation/components/glitch-link";
 import { StatusBadge } from "@/modules/shared/presentation/components/status-badge";
 import { CaseDetail } from "../../domain/case";
+import { difficultyMeta } from "../../domain/difficulty";
+import { DifficultyBadge } from "./difficulty-badge";
 
 function Block({ title, children }: { title: string; children: ReactNode }) {
   return (
@@ -15,6 +17,8 @@ function Block({ title, children }: { title: string; children: ReactNode }) {
 }
 
 export function CaseDetailView({ caseDetail }: { caseDetail: CaseDetail }) {
+  const difficulty = difficultyMeta[caseDetail.difficultyGrade];
+
   return (
     <div className="space-y-6">
       <section className="haunted-panel rounded-[2rem] border border-rose-950/40 bg-[linear-gradient(145deg,rgba(36,12,16,0.88),rgba(10,11,16,0.92))] p-8">
@@ -30,16 +34,38 @@ export function CaseDetailView({ caseDetail }: { caseDetail: CaseDetail }) {
           </div>
           <StatusBadge label={caseDetail.status} />
         </div>
-        <div className="relative z-10 mt-8 flex flex-wrap gap-3 text-sm text-zinc-400">
-          <span>보상 기록: {caseDetail.rewardName}</span>
-          <span>열람 등급: {caseDetail.accessLevel}</span>
+
+        <div className="relative z-10 mt-8 space-y-3">
+          <div className="flex flex-wrap gap-3 text-sm text-zinc-400">
+            <DifficultyBadge grade={caseDetail.difficultyGrade} />
+            <span className="rounded-full border border-white/10 bg-white/5 px-3 py-1 text-xs text-zinc-300">
+              {difficulty.summary}
+            </span>
+            <span className="inline-flex rounded-full border border-white/10 bg-white/5 px-3 py-1 text-xs text-zinc-300">
+              열람 등급: {caseDetail.accessLevel}
+            </span>
+          </div>
+          <div className="reward-record signal-chip max-w-2xl">
+            <p className="reward-record-label">REWARD RECORD</p>
+            <p className="reward-record-name" data-text={caseDetail.rewardName}>
+              {caseDetail.rewardName}
+            </p>
+            <p className="reward-record-note">운영진 승인 후 추첨 대상에 포함됩니다.</p>
+          </div>
         </div>
-        <div className="relative z-10 mt-8">
+
+        <div className="relative z-10 mt-8 flex flex-wrap gap-3">
           <GlitchLink
             href={`/cases/${caseDetail.id}/report`}
             className="signal-chip distressed-button distressed-button-danger px-5 py-3 font-medium"
           >
             현장 보고 시작
+          </GlitchLink>
+          <GlitchLink
+            href="/guide"
+            className="signal-chip distressed-button distressed-button-neutral px-5 py-3 font-medium"
+          >
+            관측 안내 보기
           </GlitchLink>
         </div>
       </section>

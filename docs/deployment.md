@@ -1,10 +1,16 @@
 # Deployment Notes
 
-This MVP is split across:
+This MVP is deployed with a split runtime:
 
-- Backend API on EC2 + Docker
+- Backend API on a direct EC2/Lightsail host with Docker
 - Frontend on Vercel
-- Auth / DB / Storage on Supabase
+- Auth / Storage on Supabase
+
+Keep the environments separate:
+
+- The backend server owns the runtime `.env` file for `apps/api`.
+- Vercel owns frontend environment variables for `apps/web`.
+- Supabase owns OAuth provider config, storage access, and related secrets.
 
 ## Production URLs
 
@@ -52,6 +58,7 @@ Important:
 - The current backend deploy flow now uses the server's Git checkout as the source of truth.
 - After the first bootstrap clone, deployment uses `origin/master` on the server instead of `rsync`.
 - Runtime data is still preserved because `.env` and `apps/api/.local` are kept outside the Git-tracked lifecycle.
+- Do not treat the root local `.env` as a frontend deployment artifact. It is a backend server runtime file in this setup.
 
 ### Backend Required Environment
 
@@ -77,9 +84,11 @@ ADMIN_EMAILS=businesskim93@gmail.com
 
 Notes:
 
+- `NEXT_PUBLIC_API_BASE_URL` is not required on the backend server.
 - `CORS_ALLOWED_ORIGINS` should include the exact Vercel production domain.
 - Add `http://localhost:3000` only if local frontend testing should keep working against production API.
 - The SQLite file stays inside the mounted remote directory, not inside the disposable container layer.
+- The `NEXT_PUBLIC_SUPABASE_*` values are still needed on the backend because some shared auth and storage flows read them as fallbacks.
 
 ## 2. Vercel Frontend Setup
 
@@ -90,12 +99,11 @@ Recommended project settings:
 - Framework: `Next.js`
 - Root: `apps/web`
 - Install command: `npm install`
-- Build command: `npm run build`
+- Build command: `npm run build --workspace web`
 
-Environment variables for Vercel:
+Frontend environment variables for Vercel:
 
 ```env
-NEXT_PUBLIC_APP_URL=https://your-vercel-domain.vercel.app
 NEXT_PUBLIC_API_BASE_URL=https://anomaly.13.124.77.254.nip.io
 
 NEXT_PUBLIC_SUPABASE_URL=
@@ -103,16 +111,14 @@ NEXT_PUBLIC_SUPABASE_PUBLISHABLE_KEY=
 NEXT_PUBLIC_SUPABASE_STORAGE_BUCKET=evidence-photos
 NEXT_PUBLIC_ADMIN_EMAIL=businesskim93@gmail.com
 NEXT_PUBLIC_SUPABASE_OAUTH_PROVIDERS=google
-
-SUPABASE_URL=
-SUPABASE_PUBLISHABLE_KEY=
-SUPABASE_SERVICE_ROLE_KEY=
-SUPABASE_STORAGE_BUCKET=evidence-photos
-ADMIN_EMAILS=businesskim93@gmail.com
 ```
 
-The web app reads `NEXT_PUBLIC_API_BASE_URL` for all browser and server-side API calls.
-Supabase is used for auth, report-photo storage, and related protected assets.
+Notes:
+
+- The web app reads `NEXT_PUBLIC_API_BASE_URL` for both browser and server-side API calls.
+- Vercel does not need the backend-only `PORT`, `SQLITE_PATH`, `CORS_ALLOWED_ORIGINS`, or `SUPABASE_SERVICE_ROLE_KEY` values.
+- Keep production and preview values separate inside Vercel.
+- Supabase is used by the frontend for auth, session handling, and direct evidence-photo upload.
 
 ## 3. Supabase Redirects
 
@@ -121,9 +127,18 @@ Add these redirect URLs in Supabase Auth:
 - `http://localhost:3000/auth/callback`
 - `https://your-vercel-domain.vercel.app/auth/callback`
 
+If you attach a custom frontend domain in Vercel, add that callback URL too.
+
 Google OAuth must keep using the Supabase callback URL from the provider setup flow.
 
 ## 4. Branch Note
 
 This repository currently uses `master` as the local default branch, not `main`.
 If Vercel production should track `main`, create or push a `main` branch from the current release commit before connecting the project.
+
+## 5. Practical Ownership
+
+- Backend deploy script pulls code from `origin/master` on the server and restarts Docker there.
+- Backend secrets live only on the server `.env`.
+- Frontend secrets and public runtime values live in the Vercel project settings, not in the server `.env`.
+- Supabase dashboard settings must stay aligned with the chosen Vercel production URL and any preview URLs you allow.

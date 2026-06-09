@@ -13,6 +13,7 @@ import {
 import { emitArchiveGlitch } from "./archive-title";
 
 const NAVIGATION_GLITCH_DELAY_MS = 500;
+const NAVIGATION_GLITCH_REPEAT_MS = 650;
 
 type GlitchLinkProps = PropsWithChildren<{
   className?: string;
@@ -24,21 +25,28 @@ export function GlitchLink({ children, className, href, ...props }: GlitchLinkPr
   const pathname = usePathname();
   const [isPending, setIsPending] = useState(false);
   const timeoutRef = useRef<number | null>(null);
+  const intervalRef = useRef<number | null>(null);
 
-  useEffect(() => {
-    setIsPending(false);
-
+  function clearPendingEffects() {
     if (timeoutRef.current !== null) {
       window.clearTimeout(timeoutRef.current);
       timeoutRef.current = null;
     }
+
+    if (intervalRef.current !== null) {
+      window.clearInterval(intervalRef.current);
+      intervalRef.current = null;
+    }
+  }
+
+  useEffect(() => {
+    setIsPending(false);
+    clearPendingEffects();
   }, [pathname]);
 
   useEffect(() => {
     return () => {
-      if (timeoutRef.current !== null) {
-        window.clearTimeout(timeoutRef.current);
-      }
+      clearPendingEffects();
     };
   }, []);
 
@@ -62,8 +70,18 @@ export function GlitchLink({ children, className, href, ...props }: GlitchLinkPr
 
     emitArchiveGlitch();
     setIsPending(true);
+    intervalRef.current = window.setInterval(() => {
+      emitArchiveGlitch();
+    }, NAVIGATION_GLITCH_REPEAT_MS);
 
     timeoutRef.current = window.setTimeout(() => {
+      if (href.startsWith("#")) {
+        window.location.hash = href.slice(1);
+        setIsPending(false);
+        clearPendingEffects();
+        return;
+      }
+
       startTransition(() => {
         router.push(href);
       });
