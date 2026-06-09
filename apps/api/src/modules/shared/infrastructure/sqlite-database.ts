@@ -40,6 +40,7 @@ export class SqliteDatabase implements OnModuleDestroy {
     this.database = new DatabaseSync(filePath);
     this.database.exec("PRAGMA foreign_keys = ON;");
     this.initializeSchema();
+    this.ensureDifficultyGradeColumn();
     this.migrateLegacySecrets();
     this.syncSeedCases();
   }
@@ -59,6 +60,7 @@ export class SqliteDatabase implements OnModuleDestroy {
         file_no TEXT NOT NULL,
         title TEXT NOT NULL,
         episode_no INTEGER NOT NULL,
+        difficulty_grade TEXT NOT NULL DEFAULT 'D',
         access_level TEXT NOT NULL,
         status TEXT NOT NULL,
         reward_name TEXT NOT NULL,
@@ -104,6 +106,20 @@ export class SqliteDatabase implements OnModuleDestroy {
     `);
   }
 
+  private ensureDifficultyGradeColumn() {
+    const columns = this.database
+      .prepare("PRAGMA table_info(cases)")
+      .all() as Array<{ name: string }>;
+
+    const hasDifficultyGrade = columns.some((column) => column.name === "difficulty_grade");
+
+    if (!hasDifficultyGrade) {
+      this.database.exec(
+        "ALTER TABLE cases ADD COLUMN difficulty_grade TEXT NOT NULL DEFAULT 'D';",
+      );
+    }
+  }
+
   private syncSeedCases() {
     const statement = this.database.prepare(`
       INSERT INTO cases (
@@ -111,6 +127,7 @@ export class SqliteDatabase implements OnModuleDestroy {
         file_no,
         title,
         episode_no,
+        difficulty_grade,
         access_level,
         status,
         reward_name,
@@ -128,11 +145,12 @@ export class SqliteDatabase implements OnModuleDestroy {
         mission_photo_requirement,
         mission_caution
       )
-      VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
+      VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
       ON CONFLICT(id) DO UPDATE SET
         file_no = excluded.file_no,
         title = excluded.title,
         episode_no = excluded.episode_no,
+        difficulty_grade = excluded.difficulty_grade,
         access_level = excluded.access_level,
         status = excluded.status,
         reward_name = excluded.reward_name,
@@ -157,6 +175,7 @@ export class SqliteDatabase implements OnModuleDestroy {
         seed.fileNo,
         seed.title,
         seed.episodeNo,
+        seed.difficultyGrade,
         seed.accessLevel,
         seed.status,
         seed.rewardName,

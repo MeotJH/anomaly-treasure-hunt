@@ -1,10 +1,15 @@
 import { CaseSummary } from "../../domain/case";
 import { StatusBadge } from "@/modules/shared/presentation/components/status-badge";
 import { GlitchLink } from "@/modules/shared/presentation/components/glitch-link";
+import { CaseThumbnail } from "./case-thumbnail";
+import { DifficultyBadge } from "./difficulty-badge";
 
 export function CaseCard({ caseItem, href }: { caseItem: CaseSummary; href: string }) {
   return (
     <article className="haunted-panel rounded-3xl border border-rose-950/40 bg-[linear-gradient(180deg,rgba(24,11,14,0.94),rgba(10,11,15,0.92))] p-6 shadow-2xl shadow-black/30 backdrop-blur">
+      <div className="relative z-10 mb-5">
+        <CaseThumbnail caseItem={caseItem} />
+      </div>
       <div className="relative z-10 flex items-start justify-between gap-4">
         <div>
           <p className="text-xs uppercase tracking-[0.28em] text-zinc-500">{caseItem.fileNo}</p>
@@ -26,6 +31,7 @@ export function CaseCard({ caseItem, href }: { caseItem: CaseSummary; href: stri
           <p className="reward-record-note">운영진 승인 후 추첨 대상에 포함됩니다.</p>
         </div>
         <div className="flex flex-wrap gap-3 text-xs text-zinc-400">
+          <DifficultyBadge grade={caseItem.difficultyGrade} compact />
           <span className="inline-flex rounded-full border border-white/8 bg-white/[0.03] px-3 py-1">
             열람 등급: {caseItem.accessLevel}
           </span>

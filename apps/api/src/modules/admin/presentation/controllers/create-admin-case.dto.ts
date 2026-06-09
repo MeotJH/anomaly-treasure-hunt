@@ -47,6 +47,9 @@ export class CreateAdminCaseDto {
   @IsNotEmpty()
   title!: string;
 
+  @IsIn(["F", "E", "D", "C", "B", "A", "S"])
+  difficultyGrade!: "F" | "E" | "D" | "C" | "B" | "A" | "S";
+
   @IsString()
   @IsNotEmpty()
   accessLevel!: string;
