@@ -6,7 +6,7 @@ import { CaseResponseMapper } from "./application/services/case-response.mapper"
 import { GetCaseDetailUseCase } from "./application/use-cases/get-case-detail.use-case";
 import { GetCurrentCaseUseCase } from "./application/use-cases/get-current-case.use-case";
 import { ListCasesUseCase } from "./application/use-cases/list-cases.use-case";
-import { SqliteCaseRepository } from "./infrastructure/repositories/sqlite-case.repository";
+import { PrismaCaseRepository } from "./infrastructure/repositories/prisma-case.repository";
 import { CasesController } from "./presentation/controllers/cases.controller";
 
 @Module({
@@ -17,10 +17,10 @@ import { CasesController } from "./presentation/controllers/cases.controller";
     GetCurrentCaseUseCase,
     ListCasesUseCase,
     GetCaseDetailUseCase,
-    SqliteCaseRepository,
+    PrismaCaseRepository,
     {
       provide: CASE_REPOSITORY,
-      useExisting: SqliteCaseRepository,
+      useExisting: PrismaCaseRepository,
     },
   ],
   exports: [CASE_REPOSITORY],

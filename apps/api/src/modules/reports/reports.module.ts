@@ -7,7 +7,7 @@ import { ListMyReportsUseCase } from "./application/use-cases/list-my-reports.us
 import { SubmitInvestigationReportUseCase } from "./application/use-cases/submit-investigation-report.use-case";
 import { EvidencePhotoUrlService } from "./application/services/evidence-photo-url.service";
 import { IdentificationCodeService } from "./application/services/identification-code.service";
-import { SqliteInvestigationReportRepository } from "./infrastructure/repositories/sqlite-investigation-report.repository";
+import { PrismaInvestigationReportRepository } from "./infrastructure/repositories/prisma-investigation-report.repository";
 import { ReportsController } from "./presentation/controllers/reports.controller";
 
 @Module({
@@ -19,10 +19,10 @@ import { ReportsController } from "./presentation/controllers/reports.controller
     SubmitInvestigationReportUseCase,
     ListMyReportsUseCase,
     GetCaseResultUseCase,
-    SqliteInvestigationReportRepository,
+    PrismaInvestigationReportRepository,
     {
       provide: INVESTIGATION_REPORT_REPOSITORY,
-      useExisting: SqliteInvestigationReportRepository,
+      useExisting: PrismaInvestigationReportRepository,
     },
   ],
   exports: [INVESTIGATION_REPORT_REPOSITORY, IdentificationCodeService, EvidencePhotoUrlService],

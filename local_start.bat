@@ -23,6 +23,10 @@ if not exist "node_modules\\.bin\\next.cmd" (
 
 if not exist "apps\\api\\.local" mkdir "apps\\api\\.local"
 
+echo [setup] Syncing Prisma schema...
+call npm run prisma:db:push --workspace api
+if errorlevel 1 exit /b 1
+
 echo [start] Opening API window on http://localhost:4000
 start "Anomaly API" cmd /k "cd /d %~dp0 && npm run dev:api"
 

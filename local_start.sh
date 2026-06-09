@@ -13,14 +13,6 @@ if [ -s "${NVM_DIR:-$HOME/.nvm}/nvm.sh" ]; then
   fi
 fi
 
-if ! node -e "require('node:sqlite')" >/dev/null 2>&1; then
-  CURRENT_NODE_VERSION="$(node -p "process.version")"
-  echo "[error] This project requires a Node.js runtime with built-in node:sqlite support."
-  echo "[error] Current Node.js: ${CURRENT_NODE_VERSION}"
-  echo "[error] Use Node.js 22.13.0+ (or 23.4.0+) and run the script again."
-  exit 1
-fi
-
 if [ ! -f ".env" ] && [ -f ".env.example" ]; then
   cp ".env.example" ".env"
 fi
@@ -31,6 +23,9 @@ if [ ! -d "node_modules" ] || [ ! -x "node_modules/.bin/tsx" ] || [ ! -x "node_m
 fi
 
 mkdir -p apps/api/.local
+
+echo "[setup] Syncing Prisma schema..."
+npm run prisma:db:push --workspace api
 
 cleanup() {
   if [[ -n "${API_PID:-}" ]]; then

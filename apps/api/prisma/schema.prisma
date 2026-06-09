@@ -1,0 +1,72 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "sqlite"
+  url      = env("DATABASE_URL")
+}
+
+model Case {
+  id                       String   @id
+  fileNo                   String   @map("file_no")
+  title                    String
+  episodeNo                Int      @map("episode_no")
+  difficultyGrade          String   @default("D") @map("difficulty_grade")
+  representativeImageUrl   String?  @map("representative_image_url")
+  accessLevel              String   @map("access_level")
+  status                   String
+  rewardName               String   @map("reward_name")
+  summary                  String
+  reportBody               String   @map("report_body")
+  safetyNotice             String   @map("safety_notice")
+  startsAt                 String   @map("starts_at")
+  endsAt                   String   @map("ends_at")
+  announcedAt              String   @map("announced_at")
+  answerLocation           String   @map("answer_location")
+  identificationCode       String   @map("identification_code")
+  completionMessage        String   @map("completion_message")
+  cluesJson                String   @map("clues_json")
+  missionInstruction       String   @map("mission_instruction")
+  missionPhotoRequirement  String   @map("mission_photo_requirement")
+  missionCaution           String   @map("mission_caution")
+  reports                  Report[]
+  winner                   Winner?
+
+  @@map("cases")
+}
+
+model Report {
+  id              String    @id
+  caseId          String    @map("case_id")
+  userId          String    @map("user_id")
+  submittedCode   String    @map("submitted_code")
+  normalizedCode  String    @map("normalized_code")
+  photoUrl        String    @map("photo_url")
+  isCodeCorrect   Int       @map("is_code_correct")
+  reviewStatus    String    @map("review_status")
+  rejectionReason String?   @map("rejection_reason")
+  submittedAt     String    @map("submitted_at")
+  reviewedAt      String?   @map("reviewed_at")
+  case            Case      @relation(fields: [caseId], references: [id], onDelete: Restrict, onUpdate: Cascade)
+
+  @@index([caseId, userId])
+  @@index([caseId, reviewStatus])
+  @@index([userId, submittedAt])
+  @@map("reports")
+}
+
+model Winner {
+  id           String    @id
+  caseId       String    @unique @map("case_id")
+  userId       String    @map("user_id")
+  reportId     String    @map("report_id")
+  status       String
+  selectedAt   String    @map("selected_at")
+  notifiedAt   String?   @map("notified_at")
+  rewardSentAt String?   @map("reward_sent_at")
+  case         Case      @relation(fields: [caseId], references: [id], onDelete: Restrict, onUpdate: Cascade)
+
+  @@index([reportId])
+  @@map("winners")
+}

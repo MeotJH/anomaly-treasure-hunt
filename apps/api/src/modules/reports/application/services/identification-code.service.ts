@@ -1,38 +1,31 @@
 import { Injectable } from "@nestjs/common";
-import { createHash } from "node:crypto";
-
-const HASH_PATTERN = /^[a-f0-9]{64}$/i;
+import {
+  hashIdentificationCode,
+  isIdentificationCodeHash,
+  maskIdentificationCode,
+  matchesIdentificationCode,
+  normalizeIdentificationCode,
+} from "../../../shared/infrastructure/identification-code.util";
 
 @Injectable()
 export class IdentificationCodeService {
   normalize(code: string) {
-    return code.trim().toUpperCase().replace(/\s+/g, "");
+    return normalizeIdentificationCode(code);
   }
 
   hash(code: string) {
-    const normalizedCode = this.normalize(code);
-    return createHash("sha256").update(normalizedCode).digest("hex");
+    return hashIdentificationCode(code);
   }
 
   isHash(value: string) {
-    return HASH_PATTERN.test(value);
+    return isIdentificationCodeHash(value);
   }
 
   matches(rawCode: string, storedHashOrLegacyCode: string) {
-    if (this.isHash(storedHashOrLegacyCode)) {
-      return this.hash(rawCode) === storedHashOrLegacyCode;
-    }
-
-    return this.normalize(rawCode) === this.normalize(storedHashOrLegacyCode);
+    return matchesIdentificationCode(rawCode, storedHashOrLegacyCode);
   }
 
   mask(code: string) {
-    const normalizedCode = this.normalize(code);
-
-    if (normalizedCode.length <= 4) {
-      return "*".repeat(normalizedCode.length);
-    }
-
-    return `${normalizedCode.slice(0, 2)}${"*".repeat(normalizedCode.length - 4)}${normalizedCode.slice(-2)}`;
+    return maskIdentificationCode(code);
   }
 }
