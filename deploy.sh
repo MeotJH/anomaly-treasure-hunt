@@ -186,6 +186,11 @@ EOF
     fi
     docker build -f Dockerfile.api -t '${BACKEND_IMAGE_NAME}' .
     docker rm -f '${BACKEND_CONTAINER_NAME}' || true
+    docker run --rm \
+      --env-file .env \
+      -v '${BACKEND_REMOTE_DIR}/apps/api/.local:/app/apps/api/.local' \
+      '${BACKEND_IMAGE_NAME}' \
+      sh -c 'if [ -z "\${DATABASE_URL:-}" ]; then export DATABASE_URL="file:/app/apps/api/\${SQLITE_PATH:-.local/anomaly-treasure-hunt.sqlite}"; fi; ./node_modules/.bin/prisma db push --schema prisma/schema.prisma'
     docker run -d \
       --name '${BACKEND_CONTAINER_NAME}' \
       --restart unless-stopped \

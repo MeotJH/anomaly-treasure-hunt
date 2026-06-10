@@ -22,15 +22,19 @@ ENV NODE_ENV=production
 
 COPY package*.json ./
 COPY apps/api/package*.json ./apps/api/
+COPY apps/api/prisma ./apps/api/prisma/
 
 RUN npm ci --omit=dev --workspace api
 
-COPY --from=builder /app/apps/api/dist ./apps/api/dist
+WORKDIR /app/apps/api
+RUN DATABASE_URL="file:/app/apps/api/.local/anomaly-treasure-hunt.sqlite" ./node_modules/.bin/prisma generate --schema prisma/schema.prisma
 
-RUN mkdir -p /app/data && chown -R node:node /app
+COPY --from=builder /app/apps/api/dist ./dist
+
+RUN mkdir -p /app/data /app/apps/api/.local && chown -R node:node /app
 
 USER node
 
 EXPOSE 4000
 
-CMD ["node", "apps/api/dist/main.js"]
+CMD ["node", "dist/main.js"]

@@ -9,7 +9,7 @@
     "start:dev": "npm run prisma:generate && npx --yes tsx watch src/main.ts",
     "build": "npm run prisma:generate && tsc -p tsconfig.build.json",
     "start": "node dist/main.js",
-    "lint": "npm run prisma:generate && tsc --noEmit"
+    "lint": "tsc --noEmit"
   },
   "dependencies": {
     "@nestjs/common": "^11.1.8",
