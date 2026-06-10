@@ -19,7 +19,7 @@ Keep the environments separate:
 
 The backend URL follows the same `nip.io` pattern already used by CafeMap on the shared EC2 host.
 
-## 1. Backend Deployment
+## 1. Combined Deployment
 
 The repository includes a root deploy script:
 
@@ -33,14 +33,28 @@ On Windows:
 deploy.bat
 ```
 
+Default behavior:
+
+1. Deploy backend to EC2/Lightsail
+2. Deploy frontend to Vercel
+
+Optional modes:
+
+```bash
+bash ./deploy.sh --back
+bash ./deploy.sh --front
+```
+
 Defaults:
 
-- SSH key: `../chickenmap/LightsailDefaultKey-ap-northeast-2.pem`
+- SSH key: `../cafemap/LightsailDefaultKey-ap-northeast-2.pem`
 - Remote host: `13.124.77.254`
 - Remote dir: `/home/ec2-user/anomaly-treasure-hunt-api`
 - Remote git branch: `master`
 - Container port mapping: `2028:4000`
 - Public URL: `https://anomaly.13.124.77.254.nip.io`
+- Frontend project dir: `apps/web`
+- Frontend public URL: `https://anomaly-treasure-hunt.vercel.app`
 
 What it does:
 
@@ -52,6 +66,8 @@ What it does:
 6. Ensures a Caddy route exists on the EC2 host.
 7. Rebuilds and restarts the Docker container.
 8. Verifies `GET /api/cases`.
+9. Builds the web app locally.
+10. Runs `vercel deploy --prod --yes` from `apps/web`.
 
 Important:
 

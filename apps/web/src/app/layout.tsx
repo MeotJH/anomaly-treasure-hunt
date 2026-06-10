@@ -14,9 +14,40 @@ const geistMono = Geist_Mono({
   subsets: ["latin"],
 });
 
+const siteUrl = process.env.NEXT_PUBLIC_SITE_URL ?? "http://localhost:3000";
+const title = "이상현상 추적 기록부";
+const description =
+  "이상현상 문서를 열람하고 현장 단서를 추적해 증거 사진과 식별 코드를 제출하는 조사형 리워드 이벤트입니다.";
+
 export const metadata: Metadata = {
-  title: "이상현상 추적 기록보관소",
-  description: "이상현상 문서 열람, 현장 제보, 보상 대상 발표를 위한 조사용 화면입니다.",
+  metadataBase: new URL(siteUrl),
+  title,
+  description,
+  icons: {
+    icon: [
+      { url: "/favicon.png", type: "image/png" },
+      { url: "/favicon-32x32.png", sizes: "32x32", type: "image/png" },
+    ],
+    apple: [{ url: "/apple-touch-icon.png", sizes: "180x180", type: "image/png" }],
+    shortcut: ["/favicon.png"],
+  },
+  openGraph: {
+    title,
+    description,
+    images: [
+      {
+        url: "/open_graph.png",
+        width: 1672,
+        height: 941,
+      },
+    ],
+  },
+  twitter: {
+    card: "summary_large_image",
+    title,
+    description,
+    images: ["/twitter-image.png"],
+  },
 };
 
 export default function RootLayout({
