@@ -87,7 +87,8 @@ export function AuthControls({
     setPendingProvider(provider);
 
     const redirectTarget = nextPath ?? window.location.pathname;
-    const redirectTo = `${window.location.origin}/auth/callback?next=${encodeURIComponent(redirectTarget)}`;
+    const authBaseUrl = supabaseConfig.siteUrl ?? window.location.origin;
+    const redirectTo = `${authBaseUrl.replace(/\/$/, "")}/auth/callback?next=${encodeURIComponent(redirectTarget)}`;
 
     const { error } = await supabase.auth.signInWithOAuth({
       provider: provider as never,
