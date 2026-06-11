@@ -24,7 +24,7 @@ const readAuthSnapshot = cache(async () => {
   const user = userData.user;
   const session = sessionData.session;
   const email = user?.email?.toLowerCase() ?? null;
-  const isAdmin = email === supabaseConfig.adminEmail.toLowerCase();
+  const isAdmin = email ? supabaseConfig.adminEmails.has(email) : false;
 
   return {
     user,
