@@ -6,10 +6,10 @@ import { DifficultyBadge } from "./difficulty-badge";
 
 export function CaseCard({ caseItem, href }: { caseItem: CaseSummary; href: string }) {
   return (
-    <article className="haunted-panel overflow-hidden rounded-[2rem] border border-rose-400/18 bg-[linear-gradient(180deg,rgba(26,11,15,0.96),rgba(10,11,15,0.96))] p-4 shadow-2xl shadow-black/35 backdrop-blur sm:p-5 lg:grid lg:grid-cols-[24rem_1fr] lg:gap-0">
+    <article className="haunted-panel overflow-hidden rounded-[2rem] border border-rose-400/18 bg-[linear-gradient(180deg,rgba(26,11,15,0.96),rgba(10,11,15,0.96))] p-4 shadow-2xl shadow-black/35 backdrop-blur sm:p-5 xl:grid xl:grid-cols-[minmax(0,22rem)_minmax(0,1fr)] xl:gap-0 2xl:grid-cols-[minmax(0,24rem)_minmax(0,1fr)]">
       <CaseThumbnail caseItem={caseItem} />
-      <div className="relative z-10 rounded-[1.45rem] border border-white/8 bg-[linear-gradient(180deg,rgba(13,11,15,0.8),rgba(8,10,14,0.9))] p-5 shadow-[inset_0_1px_0_rgba(255,255,255,0.03)] lg:ml-4 lg:flex lg:min-h-full lg:items-stretch lg:rounded-[1.6rem]">
-        <div className="flex h-full flex-1 flex-col justify-between gap-5">
+      <div className="relative z-10 mt-4 min-w-0 rounded-[1.45rem] border border-white/8 bg-[linear-gradient(180deg,rgba(13,11,15,0.8),rgba(8,10,14,0.9))] p-5 shadow-[inset_0_1px_0_rgba(255,255,255,0.03)] xl:mt-0 xl:ml-4 xl:flex xl:min-h-full xl:items-stretch xl:rounded-[1.6rem]">
+        <div className="flex h-full min-w-0 flex-1 flex-col justify-between gap-5">
           <div>
             <div className="flex flex-wrap items-start justify-between gap-4">
               <div>
