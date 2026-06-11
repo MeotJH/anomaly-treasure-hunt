@@ -59,57 +59,55 @@ export class PrismaService
   }
 
   private async syncSeedCases() {
+    const shouldUpsertExistingCases = process.env.NODE_ENV !== "production";
+
     for (const seed of createSeedCases()) {
-      await this.case.upsert({
+      const seedData = {
+        id: seed.id,
+        fileNo: seed.fileNo,
+        title: seed.title,
+        episodeNo: seed.episodeNo,
+        difficultyGrade: seed.difficultyGrade,
+        representativeImageUrl: seed.representativeImageUrl,
+        accessLevel: seed.accessLevel,
+        status: seed.status,
+        rewardName: seed.rewardName,
+        summary: seed.summary,
+        reportBody: seed.reportBody,
+        safetyNotice: seed.safetyNotice,
+        startsAt: serializeDate(seed.startsAt),
+        endsAt: serializeDate(seed.endsAt),
+        announcedAt: serializeDate(seed.announcedAt),
+        answerLocation: seed.answerLocation,
+        identificationCode: seed.identificationCodeHash,
+        completionMessage: seed.completionMessage,
+        cluesJson: serializeJson(seed.clues),
+        missionInstruction: seed.mission.instruction,
+        missionPhotoRequirement: seed.mission.photoRequirement,
+        missionCaution: seed.mission.caution,
+      } satisfies Prisma.CaseUncheckedCreateInput;
+
+      if (shouldUpsertExistingCases) {
+        const { id, ...updateData } = seedData;
+
+        await this.case.upsert({
+          where: { id: seed.id },
+          update: updateData,
+          create: seedData,
+        });
+        continue;
+      }
+
+      const existingCase = await this.case.findUnique({
         where: { id: seed.id },
-        update: {
-          fileNo: seed.fileNo,
-          title: seed.title,
-          episodeNo: seed.episodeNo,
-          difficultyGrade: seed.difficultyGrade,
-          representativeImageUrl: seed.representativeImageUrl,
-          accessLevel: seed.accessLevel,
-          status: seed.status,
-          rewardName: seed.rewardName,
-          summary: seed.summary,
-          reportBody: seed.reportBody,
-          safetyNotice: seed.safetyNotice,
-          startsAt: serializeDate(seed.startsAt),
-          endsAt: serializeDate(seed.endsAt),
-          announcedAt: serializeDate(seed.announcedAt),
-          answerLocation: seed.answerLocation,
-          identificationCode: seed.identificationCodeHash,
-          completionMessage: seed.completionMessage,
-          cluesJson: serializeJson(seed.clues),
-          missionInstruction: seed.mission.instruction,
-          missionPhotoRequirement: seed.mission.photoRequirement,
-          missionCaution: seed.mission.caution,
-        },
-        create: {
-          id: seed.id,
-          fileNo: seed.fileNo,
-          title: seed.title,
-          episodeNo: seed.episodeNo,
-          difficultyGrade: seed.difficultyGrade,
-          representativeImageUrl: seed.representativeImageUrl,
-          accessLevel: seed.accessLevel,
-          status: seed.status,
-          rewardName: seed.rewardName,
-          summary: seed.summary,
-          reportBody: seed.reportBody,
-          safetyNotice: seed.safetyNotice,
-          startsAt: serializeDate(seed.startsAt),
-          endsAt: serializeDate(seed.endsAt),
-          announcedAt: serializeDate(seed.announcedAt),
-          answerLocation: seed.answerLocation,
-          identificationCode: seed.identificationCodeHash,
-          completionMessage: seed.completionMessage,
-          cluesJson: serializeJson(seed.clues),
-          missionInstruction: seed.mission.instruction,
-          missionPhotoRequirement: seed.mission.photoRequirement,
-          missionCaution: seed.mission.caution,
-        },
+        select: { id: true },
       });
+
+      if (!existingCase) {
+        await this.case.create({
+          data: seedData,
+        });
+      }
     }
   }
 
