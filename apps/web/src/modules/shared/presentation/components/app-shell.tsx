@@ -7,7 +7,7 @@ import { BottomSheetMenu } from "./bottom-sheet-menu";
 const navigationItems = [
   { href: "/", label: "감시 현황" },
   { href: "/cases", label: "이상 기록" },
-  { href: "/me/reports", label: "내 제보" },
+  { href: "/me/reports?view=list", label: "내 제보" },
 ];
 
 export async function AppShell({ children }: PropsWithChildren) {
@@ -32,18 +32,13 @@ export async function AppShell({ children }: PropsWithChildren) {
                 <ArchiveTitle title="이상현상 추적 기록 보관소" />
               </h1>
               <p className="mt-3 max-w-2xl text-sm leading-7 text-zinc-400">
-                현장 단서, 식별 코드, 제보 이력을 한곳에 모아 이상현상의 흔적을 추적하는 감시용 시제품입니다.
+                현장 단서, 식별 코드, 제보 이력을 수집해 이상현상의 흔적을 추적하는 감시 기록 체계입니다.
               </p>
             </div>
           </div>
 
           <div className="mt-4 flex items-center justify-end">
-            <AuthControls
-              userEmail={auth.email}
-              isAdmin={auth.isAdmin}
-              align="end"
-              compact
-            />
+            <AuthControls userEmail={auth.email} isAdmin={auth.isAdmin} align="end" compact />
           </div>
         </header>
         <main className="app-shell-main flex-1">{children}</main>

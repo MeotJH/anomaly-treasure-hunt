@@ -21,8 +21,10 @@ export function BottomSheetMenu({
     <nav className="fixed inset-x-0 bottom-0 z-40 border-t border-rose-900/40 bg-[linear-gradient(180deg,rgba(18,10,13,0.92),rgba(6,7,10,0.98))] px-3 pb-[calc(env(safe-area-inset-bottom,0px)+0.85rem)] pt-3 backdrop-blur-xl">
       <div className="mx-auto flex max-w-4xl items-center justify-center gap-2">
         {items.map((item) => {
+          const normalizedHref = item.href.split("?")[0] ?? item.href;
           const isActive =
-            pathname === item.href || (item.href !== "/" && pathname.startsWith(item.href));
+            pathname === normalizedHref ||
+            (normalizedHref !== "/" && pathname.startsWith(normalizedHref));
 
           return (
             <GlitchLink
