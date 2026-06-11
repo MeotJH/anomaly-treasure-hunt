@@ -93,6 +93,34 @@ const participationGuide = [
   },
 ] as const;
 
+const basicObservationFlow = [
+  {
+    step: "01",
+    title: "문서 열람",
+    description: "공개 사건 파일에서 단서와 금지 조건을 확인합니다.",
+  },
+  {
+    step: "02",
+    title: "위치 추리",
+    description: "누락된 지명, 구조물, 반복 문장을 실제 장소와 대조합니다.",
+  },
+  {
+    step: "03",
+    title: "현장 촬영",
+    description: "안전한 공개 동선에서 조건에 맞는 증거 사진을 확보합니다.",
+  },
+  {
+    step: "04",
+    title: "코드 제출",
+    description: "식별 코드와 사진을 함께 제출해 제보 기록을 생성합니다.",
+  },
+  {
+    step: "05",
+    title: "수동 검토",
+    description: "운영진 승인 후 보상 추첨 대상에 편입됩니다.",
+  },
+] as const;
+
 const difficultyBands = [
   {
     title: "낮음",
@@ -260,6 +288,24 @@ export default function GuidePage() {
             <p className="mt-5 max-w-xl text-lg leading-8 text-zinc-300 sm:text-xl">
               처음 참여한다면 아래 절차와 증거 기준을 먼저 확인하세요.
             </p>
+            <div className="mt-7 rounded-[1.5rem] border border-white/10 bg-black/24 p-4 shadow-[inset_0_1px_0_rgba(255,255,255,0.04)] sm:p-5">
+              <p className="text-xs uppercase tracking-[0.28em] text-rose-300/70">기본 절차 요약</p>
+              <p className="mt-2 text-sm leading-6 text-zinc-300">
+                이 관측소의 기록은 사건 문서, 실제 장소, 현장 증거, 식별 코드가 모두 맞을 때 성립합니다.
+              </p>
+              <div className="mt-4 grid gap-2 sm:grid-cols-5">
+                {basicObservationFlow.map((flow) => (
+                  <article
+                    key={flow.step}
+                    className="rounded-[1rem] border border-rose-500/14 bg-white/[0.03] p-3"
+                  >
+                    <p className="text-[0.68rem] font-semibold tracking-[0.22em] text-rose-300/70">{flow.step}</p>
+                    <h2 className="mt-1.5 text-sm font-semibold text-zinc-50">{flow.title}</h2>
+                    <p className="mt-1.5 text-xs leading-5 text-zinc-400">{flow.description}</p>
+                  </article>
+                ))}
+              </div>
+            </div>
           </div>
 
           <div className="relative z-10 min-h-[240px]">
