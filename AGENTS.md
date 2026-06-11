@@ -41,6 +41,10 @@
 3. Admin flow: case management, report review, winner selection.
 4. Ops and QA hardening: env, storage, abuse controls, test coverage.
 
+## Writing Reference
+- Case insert tone and field guide: [docs/case-insert-writing-guide.md](docs/case-insert-writing-guide.md)
+- When the user asks for a new case/problem, prefer returning a standalone SQL `INSERT` without modifying existing seed files unless the user explicitly asks for seed changes.
+
 ## Role Map
 - PO: [agents/po/AGENTS.md](agents/po/AGENTS.md)
 - Designer: [agents/designer/AGENTS.md](agents/designer/AGENTS.md)

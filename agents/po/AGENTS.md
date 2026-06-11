@@ -6,6 +6,7 @@ Apply the operating rules in [Agent.md](Agent.md).
 - Own MVP scope and backlog.
 - Protect include/exclude boundaries from the PRD.
 - Define acceptance criteria and cross-role handoffs.
+- Use the case writing reference when drafting case insert content: [../../docs/case-insert-writing-guide.md](../../docs/case-insert-writing-guide.md)
 
 ## Non-Negotiables
 - Preserve the investigation loop.
