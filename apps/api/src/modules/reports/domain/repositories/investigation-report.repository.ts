@@ -16,6 +16,7 @@ export interface InvestigationReportRepository {
   findByUserId(userId: string): Promise<InvestigationReport[]>;
   findByCaseId(caseId: string): Promise<InvestigationReport[]>;
   findById(reportId: string): Promise<InvestigationReport | null>;
+  delete(reportId: string): Promise<void>;
   updateReview(
     reportId: string,
     reviewStatus: ReviewStatus,

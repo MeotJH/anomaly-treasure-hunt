@@ -75,3 +75,12 @@ export async function submitCaseReport(caseId: string, payload: { code: string; 
     body: JSON.stringify(payload),
   });
 }
+
+export async function deleteMyReport(reportId: string) {
+  const authHeaders = await getBrowserAuthorizationHeaders(true);
+
+  return readJson<{ message: string }>(`/api/me/reports/${reportId}`, {
+    method: "DELETE",
+    headers: authHeaders,
+  });
+}

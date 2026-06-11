@@ -1,4 +1,5 @@
-import { Body, Controller, Get, Inject, Param, Post, Req } from "@nestjs/common";
+import { Body, Controller, Delete, Get, Inject, Param, Post, Req } from "@nestjs/common";
+import { DeleteMyReportUseCase } from "../../application/use-cases/delete-my-report.use-case";
 import { Request } from "express";
 import { GetCaseResultUseCase } from "../../application/use-cases/get-case-result.use-case";
 import { ListMyReportsUseCase } from "../../application/use-cases/list-my-reports.use-case";
@@ -13,6 +14,8 @@ export class ReportsController {
     private readonly submitInvestigationReportUseCase: SubmitInvestigationReportUseCase,
     @Inject(ListMyReportsUseCase)
     private readonly listMyReportsUseCase: ListMyReportsUseCase,
+    @Inject(DeleteMyReportUseCase)
+    private readonly deleteMyReportUseCase: DeleteMyReportUseCase,
     @Inject(GetCaseResultUseCase)
     private readonly getCaseResultUseCase: GetCaseResultUseCase,
   ) {}
@@ -37,6 +40,12 @@ export class ReportsController {
   async listMyReports(@Req() request: Request) {
     const user = await getRequestUser(request);
     return this.listMyReportsUseCase.execute(user.id);
+  }
+
+  @Delete("me/reports/:reportId")
+  async deleteMyReport(@Param("reportId") reportId: string, @Req() request: Request) {
+    const user = await getRequestUser(request);
+    return this.deleteMyReportUseCase.execute(reportId, user.id);
   }
 
   @Get("cases/:caseId/result")

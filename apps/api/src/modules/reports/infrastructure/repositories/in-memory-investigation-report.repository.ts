@@ -53,6 +53,16 @@ export class InMemoryInvestigationReportRepository
     return this.reports.find((report) => report.id === reportId) ?? null;
   }
 
+  async delete(reportId: string) {
+    const index = this.reports.findIndex((report) => report.id === reportId);
+
+    if (index === -1) {
+      throw new NotFoundException(`Report ${reportId} was not found.`);
+    }
+
+    this.reports.splice(index, 1);
+  }
+
   async updateReview(
     reportId: string,
     reviewStatus: ReviewStatus,

@@ -2,6 +2,7 @@ import { Module, forwardRef } from "@nestjs/common";
 import { SharedModule } from "../shared/shared.module";
 import { CasesModule } from "../cases/cases.module";
 import { INVESTIGATION_REPORT_REPOSITORY } from "./reports.tokens";
+import { DeleteMyReportUseCase } from "./application/use-cases/delete-my-report.use-case";
 import { GetCaseResultUseCase } from "./application/use-cases/get-case-result.use-case";
 import { ListMyReportsUseCase } from "./application/use-cases/list-my-reports.use-case";
 import { SubmitInvestigationReportUseCase } from "./application/use-cases/submit-investigation-report.use-case";
@@ -20,6 +21,7 @@ import { ReportsController } from "./presentation/controllers/reports.controller
     IdentificationCodeService,
     SubmitInvestigationReportUseCase,
     ListMyReportsUseCase,
+    DeleteMyReportUseCase,
     GetCaseResultUseCase,
     PrismaInvestigationReportRepository,
     {

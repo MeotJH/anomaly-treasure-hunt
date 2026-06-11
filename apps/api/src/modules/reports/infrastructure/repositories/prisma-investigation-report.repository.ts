@@ -111,6 +111,12 @@ export class PrismaInvestigationReportRepository
     return row ? this.mapReport(row) : null;
   }
 
+  async delete(reportId: string) {
+    await this.prismaService.report.delete({
+      where: { id: reportId },
+    });
+  }
+
   async updateReview(
     reportId: string,
     reviewStatus: ReviewStatus,
