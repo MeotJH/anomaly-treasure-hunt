@@ -138,44 +138,105 @@ const difficultyBands = [
   },
 ] as const;
 
+const difficultyDefinitions = [
+  {
+    grade: "F",
+    title: "기초 공개 관측",
+    description:
+      "공개 동선 안에서 바로 확인 가능한 초입 단계입니다. 장소 단서가 비교적 분명하고, 기본 안내만 지켜도 관측 흐름을 이해할 수 있습니다.",
+  },
+  {
+    grade: "E",
+    title: "초급 현장 접근",
+    description:
+      "기초 장비와 기본 주의만으로 대응 가능한 수준입니다. 사진 대상과 주변 맥락만 정확히 확보하면 검토 가능한 기록으로 분류됩니다.",
+  },
+  {
+    grade: "D",
+    title: "표준 조사 단계",
+    description:
+      "일반 참가자도 도전 가능한 보통 난이도입니다. 단서 조합, 현장 식별, 제출 사진 조건을 함께 맞춰야 합니다.",
+  },
+  {
+    grade: "C",
+    title: "중급 반복 판독",
+    description:
+      "반복 관찰과 비교 판단이 필요한 단계입니다. 사진 주피사체, 위치 맥락, 코드 조건을 더 엄격하게 충족해야 합니다.",
+  },
+  {
+    grade: "B",
+    title: "상급 위험 징후",
+    description:
+      "위험 징후가 뚜렷하게 드러나는 상급 단계입니다. 접근 전에 동선, 중단 기준, 반려 조건을 먼저 이해해야 합니다.",
+  },
+  {
+    grade: "A",
+    title: "베테랑 조사 권장",
+    description:
+      "경험 있는 조사자를 전제로 하는 고위험 단계입니다. 규칙 누락이나 현장 오판이 큰 실패로 이어질 수 있습니다.",
+  },
+  {
+    grade: "S",
+    title: "최상위 위험 단계",
+    description:
+      "규칙을 조금만 어겨도 즉각적인 피해나 회복하기 어려운 결과를 초래할 수 있는 최상위 난이도입니다.",
+  },
+] as const;
+
 function GuideOrb({ variant }: { variant: "steps" | "evidence" | "reward" | "safety" }) {
   const glyph = {
     steps: (
-      <div className="relative h-16 w-16">
-        <div className="absolute inset-3 rounded-xl border border-rose-300/55" />
-        <div className="absolute left-5 top-6 h-1 w-6 bg-rose-200/80" />
-        <div className="absolute left-5 top-9 h-1 w-5 bg-rose-200/60" />
-        <div className="absolute right-4 top-8 h-5 w-5 rounded-full border border-rose-300/80" />
-      </div>
+      <svg viewBox="0 0 64 64" className="h-14 w-14 text-rose-100" fill="none" aria-hidden="true">
+        <path d="M18 19h20" stroke="currentColor" strokeWidth="2.2" strokeLinecap="round" />
+        <path d="M18 31h16" stroke="currentColor" strokeWidth="2.2" strokeLinecap="round" opacity="0.78" />
+        <path d="M18 43h12" stroke="currentColor" strokeWidth="2.2" strokeLinecap="round" opacity="0.58" />
+        <circle cx="45" cy="21" r="5.5" stroke="currentColor" strokeWidth="2.2" />
+        <path d="m42.5 21 1.6 1.6 3.4-3.4" stroke="currentColor" strokeWidth="2.2" strokeLinecap="round" strokeLinejoin="round" />
+      </svg>
     ),
     evidence: (
-      <div className="relative h-16 w-16">
-        <div className="absolute inset-4 rounded-lg border border-rose-300/55" />
-        <div className="absolute left-7 top-3 h-10 w-10 rounded-full border border-rose-300/80" />
-        <div className="absolute left-12 top-8 h-px w-7 bg-rose-200/80" />
-        <div className="absolute left-[1.9rem] top-[1.55rem] h-3.5 w-3.5 rounded-full border border-rose-300/80" />
-      </div>
+      <svg viewBox="0 0 64 64" className="h-14 w-14 text-rose-100" fill="none" aria-hidden="true">
+        <path
+          d="M10 32c4.8-7.7 12.5-12 22-12s17.2 4.3 22 12c-4.8 7.7-12.5 12-22 12S14.8 39.7 10 32Z"
+          stroke="currentColor"
+          strokeWidth="2.2"
+          strokeLinejoin="round"
+        />
+        <circle cx="32" cy="32" r="8.5" stroke="currentColor" strokeWidth="2.2" />
+        <circle cx="32" cy="32" r="3.2" fill="currentColor" />
+        <path d="M46.5 20.5 51 16" stroke="currentColor" strokeWidth="2.2" strokeLinecap="round" opacity="0.65" />
+      </svg>
     ),
     reward: (
-      <div className="relative h-16 w-16">
-        <div className="absolute inset-x-5 top-4 h-9 rounded-t-[1rem] border border-b-0 border-rose-300/70" />
-        <div className="absolute inset-x-4 top-6 h-8 rounded-b-[1rem] border border-rose-300/70" />
-        <div className="absolute left-1/2 top-8 h-3 w-3 -translate-x-1/2 rotate-45 border border-rose-200/80" />
-      </div>
+      <svg viewBox="0 0 64 64" className="h-14 w-14 text-rose-100" fill="none" aria-hidden="true">
+        <path
+          d="M20 18h24v8c0 8.1-5.2 15.3-12 18-6.8-2.7-12-9.9-12-18v-8Z"
+          stroke="currentColor"
+          strokeWidth="2.2"
+          strokeLinejoin="round"
+        />
+        <path d="M26 24h12" stroke="currentColor" strokeWidth="2.2" strokeLinecap="round" opacity="0.75" />
+        <path d="m32 28 5 5-5 5-5-5 5-5Z" stroke="currentColor" strokeWidth="2.2" strokeLinejoin="round" />
+      </svg>
     ),
     safety: (
-      <div className="relative h-16 w-16">
-        <div className="absolute left-1/2 top-3 h-0 w-0 -translate-x-1/2 border-l-[22px] border-r-[22px] border-b-[38px] border-l-transparent border-r-transparent border-b-rose-300/15" />
-        <div className="absolute left-1/2 top-4 h-0 w-0 -translate-x-1/2 border-l-[18px] border-r-[18px] border-b-[32px] border-l-transparent border-r-transparent border-b-transparent outline outline-1 outline-rose-300/70" />
-        <div className="absolute left-1/2 top-8 h-4 w-1 -translate-x-1/2 rounded-full bg-rose-200/90" />
-        <div className="absolute left-1/2 top-[2.8rem] h-1.5 w-1.5 -translate-x-1/2 rounded-full bg-rose-200/90" />
-      </div>
+      <svg viewBox="0 0 64 64" className="h-14 w-14 text-rose-100" fill="none" aria-hidden="true">
+        <path d="M32 14 50 47H14L32 14Z" stroke="currentColor" strokeWidth="2.2" strokeLinejoin="round" />
+        <path d="M32 25v10" stroke="currentColor" strokeWidth="2.6" strokeLinecap="round" />
+        <circle cx="32" cy="40.5" r="1.7" fill="currentColor" />
+      </svg>
     ),
   }[variant];
 
   return (
     <div className="guide-orb">
-      <div className="guide-orb-core">{glyph}</div>
+      <div className="guide-orb-core">
+        <div className="pointer-events-none absolute inset-0 rounded-full bg-[radial-gradient(circle,rgba(244,114,182,0.16)_0%,rgba(244,63,94,0.08)_28%,transparent_62%)]" />
+        <div className="relative flex h-24 w-24 items-center justify-center rounded-[2rem] border border-rose-400/22 bg-[linear-gradient(180deg,rgba(255,255,255,0.05),rgba(255,255,255,0.01))] shadow-[inset_0_1px_0_rgba(255,255,255,0.07)] backdrop-blur">
+          <div className="absolute inset-[0.45rem] rounded-[1.35rem] border border-rose-300/14" />
+          {glyph}
+        </div>
+      </div>
     </div>
   );
 }
@@ -265,50 +326,58 @@ export default function GuidePage() {
         ))}
       </section>
 
-      <section className="guide-difficulty haunted-panel rounded-[2.25rem] border border-rose-500/20 px-6 py-7 sm:px-8 sm:py-8 lg:px-10 lg:py-10">
+      <section className="guide-difficulty haunted-panel rounded-[2.25rem] border border-rose-500/20 px-5 py-6 sm:px-7 sm:py-7 lg:px-9 lg:py-9">
         <div className="max-w-3xl">
           <span className="inline-flex rounded-full border border-rose-400/30 bg-rose-500/10 px-4 py-2 text-sm font-medium text-rose-200">
-            관측 기준
+            위험도 기준
           </span>
-          <h2 className="mt-6 text-5xl font-semibold tracking-tight text-zinc-50 sm:text-6xl">
-            <span className="glitch-text" data-text="관측 난이도">
-              관측 난이도
+          <h2 className="mt-5 text-4xl font-semibold tracking-tight text-zinc-50 sm:text-5xl">
+            <span className="glitch-text" data-text="위험도 세부 정의">
+              위험도 세부 정의
             </span>
           </h2>
-          <p className="mt-5 text-lg leading-8 text-zinc-300 sm:text-xl">
-            난이도는 단서 해석의 복잡도, 현장 접근성, 증거 확보의 어려움을 종합해 산정됩니다.
+          <p className="mt-4 text-base leading-7 text-zinc-300 sm:text-lg">
+            각 사건 문서는 현장 접근성, 단서 해석 난도, 증거 확보 조건, 중단 기준을 함께 반영해 위험도를 구분합니다.
           </p>
         </div>
 
         <div className="guide-line mt-8" />
 
-        <div className="mt-7 grid gap-5">
+        <div className="mt-6 grid gap-3 sm:gap-4">
           {difficultyBands.map((band) => (
             <article
               key={band.title}
-              className={`relative overflow-hidden rounded-[2rem] border bg-[linear-gradient(135deg,rgba(22,11,14,0.96),rgba(8,9,13,0.98)),radial-gradient(circle_at_left,transparent,transparent)] p-5 sm:p-6 ${band.tone.border} ${band.tone.glow}`}
+              className={`relative overflow-hidden rounded-[1.7rem] border bg-[linear-gradient(135deg,rgba(22,11,14,0.96),rgba(8,9,13,0.98)),radial-gradient(circle_at_left,transparent,transparent)] p-4 sm:p-5 ${band.tone.border} ${band.tone.glow}`}
             >
-              <div className={`pointer-events-none absolute inset-y-0 left-0 w-40 bg-gradient-to-r ${band.tone.panel}`} />
-              <div className="grid gap-6 lg:grid-cols-[15rem_1fr] lg:items-center">
-                <div className="flex items-center gap-5">
-                  <div className={`guide-radar ${band.tone.radar}`} />
+              <div className={`pointer-events-none absolute inset-y-0 left-0 w-32 bg-gradient-to-r ${band.tone.panel}`} />
+              <div className="grid gap-4 lg:grid-cols-[13rem_1fr] lg:items-center">
+                <div className="flex flex-col gap-3">
+                  <div className="flex flex-wrap justify-center gap-2 sm:justify-start">
+                    {band.grades.map((grade) => (
+                      <span
+                        key={`${grade}-label`}
+                        className="inline-flex rounded-full border border-white/10 bg-white/[0.04] px-3 py-1 text-xs font-semibold uppercase tracking-[0.24em] text-zinc-200"
+                      >
+                        {grade}급
+                      </span>
+                    ))}
+                  </div>
                   <div>
-                    <h3 className="text-5xl font-semibold tracking-tight text-zinc-50">{band.title}</h3>
-                    <p className={`mt-2 text-2xl font-medium ${band.tone.accent}`}>{band.subtitle}</p>
-                    <div className="mt-4 flex flex-wrap gap-2">
-                      {band.grades.map((grade) => (
-                        <DifficultyBadge key={grade} grade={grade} compact />
-                      ))}
-                    </div>
+                    <h3 className="text-center text-2xl font-semibold tracking-tight text-zinc-50 sm:text-left sm:text-4xl">
+                      {band.title}
+                    </h3>
+                    <p className={`mt-1.5 text-center text-base font-medium sm:text-left sm:text-xl ${band.tone.accent}`}>
+                      {band.subtitle}
+                    </p>
                   </div>
                 </div>
 
-                <div className="border-l-0 border-white/10 lg:border-l lg:pl-8">
-                  <ul className="space-y-4">
+                <div className="border-l-0 border-white/10 lg:border-l lg:pl-6">
+                  <ul className="space-y-3 sm:space-y-4">
                     {band.bullets.map((bullet) => (
-                      <li key={bullet} className="flex items-start gap-4 text-2xl text-zinc-100 sm:text-[2rem]">
-                        <span className={`mt-4 h-2.5 w-2.5 shrink-0 rounded-full ${band.tone.dot}`} />
-                        <span className="text-xl leading-8 text-zinc-200 sm:text-2xl">{bullet}</span>
+                      <li key={bullet} className="flex items-start gap-3 text-zinc-100 sm:gap-4">
+                        <span className={`mt-2.5 h-2 w-2 shrink-0 rounded-full sm:mt-4 sm:h-2.5 sm:w-2.5 ${band.tone.dot}`} />
+                        <span className="text-sm leading-6 text-zinc-200 sm:text-lg sm:leading-7">{bullet}</span>
                       </li>
                     ))}
                   </ul>
@@ -318,40 +387,49 @@ export default function GuidePage() {
           ))}
         </div>
 
-        <div className="mt-7 rounded-[1.8rem] border border-white/10 bg-[linear-gradient(180deg,rgba(20,11,14,0.92),rgba(7,8,12,0.96))] p-5 sm:p-6">
-          <div className="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
-            <div>
-              <p className="text-sm uppercase tracking-[0.28em] text-rose-300/70">위험도 세부 정의</p>
-              <div className="mt-4 flex flex-wrap gap-2">
-                {(["F", "E", "D", "C", "B", "A", "S"] as const).map((grade) => (
-                  <DifficultyBadge key={grade} grade={grade} compact />
-                ))}
-              </div>
-            </div>
-            <div className="max-w-2xl text-sm leading-7 text-zinc-300">
-              <p>
-                `F ~ E급`은 비교적 안전하거나 초보자가 다룰 수 있는 수준입니다. `D ~ C급`은 일반적인 탐사
-                대상이 되는 보통 난이도입니다. `B ~ A급`은 치명적인 위협이 도사리고 있어 베테랑 탐사자가
-                요구됩니다. `S급`은 규칙을 조금만 어겨도 즉각적인 사망이나 끔찍한 결과를 초래할 수 있는 최상위
-                난이도입니다.
-              </p>
+        <div className="mt-7 rounded-[1.8rem] border border-white/10 bg-[linear-gradient(180deg,rgba(20,11,14,0.92),rgba(7,8,12,0.96))] p-4 sm:p-6">
+          <div>
+            <p className="text-sm uppercase tracking-[0.28em] text-rose-300/70">관측 난이도</p>
+            <div className="-mx-1 mt-4 flex snap-x gap-2 overflow-x-auto px-1 pb-1 sm:mx-0 sm:flex-wrap sm:overflow-visible sm:px-0 sm:pb-0">
+              {(["F", "E", "D", "C", "B", "A", "S"] as const).map((grade) => (
+                <div key={grade} className="shrink-0 snap-start">
+                  <DifficultyBadge grade={grade} compact />
+                </div>
+              ))}
             </div>
           </div>
 
+          <div className="mt-5 grid gap-3 sm:grid-cols-2 xl:grid-cols-[repeat(4,minmax(0,1fr))]">
+            {difficultyDefinitions.map((item) => (
+              <article
+                key={item.grade}
+                className="rounded-[1.35rem] border border-white/10 bg-[linear-gradient(180deg,rgba(255,255,255,0.03),rgba(255,255,255,0.01))] p-4"
+              >
+                <div className="flex items-center gap-3">
+                  <DifficultyBadge grade={item.grade} compact />
+                  <p className="text-sm font-medium uppercase tracking-[0.22em] text-zinc-400">{item.title}</p>
+                </div>
+                <p className="mt-3 text-sm leading-6 text-zinc-300">{item.description}</p>
+              </article>
+            ))}
+          </div>
+
           <div className="mt-6 grid gap-3 rounded-[1.4rem] border border-rose-500/16 bg-black/20 p-4 sm:grid-cols-[1fr_auto] sm:items-center">
-            <div className="flex items-center gap-4">
-              <div className="flex h-14 w-14 items-center justify-center rounded-2xl border border-rose-500/24 bg-rose-500/8 text-lg font-semibold text-rose-100">
+            <div className="flex flex-col gap-4 sm:flex-row sm:items-center">
+              <div className="flex h-12 w-12 shrink-0 items-center justify-center rounded-2xl border border-rose-500/24 bg-rose-500/8 text-base font-semibold text-rose-100 sm:h-14 sm:w-14 sm:text-lg">
                 FILE
               </div>
-              <div>
+              <div className="min-w-0">
                 <p className="text-sm uppercase tracking-[0.24em] text-zinc-500">사건 예시</p>
-                <p className="mt-1 text-2xl font-semibold text-zinc-50">FILE-001 도시 폐엽 신호 변조</p>
-                <p className="mt-1 text-base text-emerald-300">
+                <p className="mt-1 text-xl font-semibold leading-tight text-zinc-50 sm:text-2xl">
+                  FILE-001 도시 폐엽 신호 변조
+                </p>
+                <p className="mt-2 text-sm leading-6 text-emerald-300 sm:text-base">
                   {difficultyMeta.F.summary} / {difficultyMeta.E.summary}
                 </p>
               </div>
             </div>
-            <span className="inline-flex rounded-full border border-emerald-400/22 bg-emerald-500/10 px-4 py-2 text-sm font-medium text-emerald-200">
+            <span className="inline-flex w-full items-center justify-center rounded-full border border-emerald-400/22 bg-emerald-500/10 px-4 py-2 text-sm font-medium text-emerald-200 sm:w-auto">
               초보 조사자 적합
             </span>
           </div>
