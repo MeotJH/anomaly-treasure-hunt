@@ -8,6 +8,7 @@ export interface InvestigationReportProps {
   submittedCodeMask: string;
   normalizedCodeHash: string;
   photoUrl: string;
+  displayPhotoUrl: string | null;
   isCodeCorrect: boolean;
   reviewStatus: ReviewStatus;
   rejectionReason: string | null;
@@ -36,6 +37,10 @@ export class InvestigationReport {
 
   get photoUrl() {
     return this.props.photoUrl;
+  }
+
+  get displayPhotoUrl() {
+    return this.props.displayPhotoUrl;
   }
 
   get submittedAt() {

@@ -10,6 +10,7 @@ export interface InvestigationReportSnapshot {
   userId: string;
   submittedCodeMask: string;
   photoUrl: string;
+  displayPhotoUrl?: string | null;
   isCodeCorrect: boolean;
   reviewStatus: "pending" | "approved" | "rejected";
   rejectionReason: string | null;

@@ -2,5 +2,6 @@
 
 Current feature scope is reset to the Prisma ORM migration.
 
-## Current Feature
+## Current Features
 - [prisma-orm-migration](prisma-orm-migration/README.md)
+- [user-facing-report-photo-corruption](user-facing-report-photo-corruption/README.md)

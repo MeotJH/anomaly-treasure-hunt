@@ -21,6 +21,9 @@ export function ReportDetailView({
   description,
   backHref,
   backLabel,
+  imageMode = "original",
+  showOriginalLink = true,
+  showArtifactNotice = false,
   trailingActions,
 }: {
   report: MyInvestigationReportSnapshot;
@@ -28,8 +31,13 @@ export function ReportDetailView({
   description: string;
   backHref: string;
   backLabel: string;
+  imageMode?: "display" | "original";
+  showOriginalLink?: boolean;
+  showArtifactNotice?: boolean;
   trailingActions?: ReactNode;
 }) {
+  const previewPhotoUrl = imageMode === "display" ? report.displayPhotoUrl ?? report.photoUrl : report.photoUrl;
+
   return (
     <div className="space-y-6">
       <section className="rounded-[2rem] border border-rose-950/40 bg-[linear-gradient(145deg,rgba(32,11,14,0.88),rgba(10,11,16,0.92))] p-8">
@@ -48,9 +56,14 @@ export function ReportDetailView({
       </section>
 
       <section className="overflow-hidden rounded-[2rem] border border-rose-950/40 bg-[linear-gradient(180deg,rgba(24,11,14,0.94),rgba(10,11,15,0.92))] p-6">
+        {showArtifactNotice ? (
+          <div className="mb-4 rounded-2xl border border-amber-400/18 bg-amber-400/10 px-4 py-3 text-sm leading-6 text-amber-50">
+            열람용 사본에 기록 손실이 감지되었습니다. 운영 검토에는 원본 기록이 사용됩니다.
+          </div>
+        ) : null}
         <div className="overflow-hidden rounded-3xl border border-white/10 bg-black/20">
           <img
-            src={report.photoUrl}
+            src={previewPhotoUrl}
             alt={`${report.caseTitle} 제출 증거`}
             className="max-h-[36rem] w-full object-cover"
           />
@@ -75,14 +88,16 @@ export function ReportDetailView({
           </p>
         ) : null}
         <div className="mt-5 flex flex-wrap gap-3">
-          <a
-            href={report.photoUrl}
-            target="_blank"
-            rel="noreferrer"
-            className="distressed-button distressed-button-neutral px-4 py-2 text-sm"
-          >
-            증거 원본 보기
-          </a>
+          {showOriginalLink ? (
+            <a
+              href={report.photoUrl}
+              target="_blank"
+              rel="noreferrer"
+              className="distressed-button distressed-button-neutral px-4 py-2 text-sm"
+            >
+              증거 원본 보기
+            </a>
+          ) : null}
           <GlitchLink
             href={backHref}
             className="distressed-button distressed-button-info px-4 py-2 text-sm"

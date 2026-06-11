@@ -43,6 +43,7 @@ model Report {
   submittedCode   String    @map("submitted_code")
   normalizedCode  String    @map("normalized_code")
   photoUrl        String    @map("photo_url")
+  displayPhotoUrl String?   @map("display_photo_url")
   isCodeCorrect   Int       @map("is_code_correct")
   reviewStatus    String    @map("review_status")
   rejectionReason String?   @map("rejection_reason")

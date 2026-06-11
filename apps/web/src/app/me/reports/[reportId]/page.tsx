@@ -23,9 +23,12 @@ export default async function MyReportDetailPage({
     <ReportDetailView
       report={report}
       heading={report.caseTitle}
-      description="제출된 증거 이미지와 검토 결과를 확인하는 개인 제보 상세 기록입니다."
+      description="제출한 증거 이미지와 검토 결과를 확인하는 개인 제보 상세 기록입니다."
       backHref="/me/reports"
       backLabel="내 제보 목록으로"
+      imageMode="display"
+      showOriginalLink={false}
+      showArtifactNotice
     />
   );
 }

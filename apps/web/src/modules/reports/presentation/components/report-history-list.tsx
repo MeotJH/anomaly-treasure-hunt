@@ -29,7 +29,7 @@ export function ReportHistoryList({ reports }: { reports: MyInvestigationReportS
           <div className="mt-4 flex gap-4">
             <div className="h-24 w-28 shrink-0 overflow-hidden rounded-2xl border border-white/10 bg-black/20">
               <img
-                src={report.photoUrl}
+                src={report.displayPhotoUrl ?? report.photoUrl}
                 alt={`${report.caseTitle} 제출 증거`}
                 className="h-full w-full object-cover"
               />
@@ -42,6 +42,11 @@ export function ReportHistoryList({ reports }: { reports: MyInvestigationReportS
               <p className="mt-3 text-sm leading-7 text-zinc-300">
                 제출 시각: {new Date(report.submittedAt).toLocaleString("ko-KR")}
               </p>
+              {report.displayPhotoUrl ? (
+                <p className="mt-2 text-xs uppercase tracking-[0.22em] text-amber-200/70">
+                  열람용 사본에 기록 손실 반영됨
+                </p>
+              ) : null}
               <div className="mt-4">
                 <GlitchLink
                   href={`/me/reports/${report.id}`}

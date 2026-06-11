@@ -5,6 +5,7 @@ import {
   HttpStatus,
   Inject,
   Injectable,
+  Logger,
   NotFoundException,
 } from "@nestjs/common";
 import { CASE_REPOSITORY } from "../../../cases/cases.tokens";
@@ -12,6 +13,7 @@ import { CaseRepository } from "../../../cases/domain/repositories/case.reposito
 import { INVESTIGATION_REPORT_REPOSITORY } from "../../reports.tokens";
 import { InvestigationReport } from "../../domain/entities/investigation-report.entity";
 import { InvestigationReportRepository } from "../../domain/repositories/investigation-report.repository";
+import { EvidencePhotoCorruptionService } from "../services/evidence-photo-corruption.service";
 import { IdentificationCodeService } from "../services/identification-code.service";
 
 interface SubmitReportCommand {
@@ -30,11 +32,15 @@ const storagePathPrefix = "reports/";
 
 @Injectable()
 export class SubmitInvestigationReportUseCase {
+  private readonly logger = new Logger(SubmitInvestigationReportUseCase.name);
+
   constructor(
     @Inject(CASE_REPOSITORY)
     private readonly caseRepository: CaseRepository,
     @Inject(INVESTIGATION_REPORT_REPOSITORY)
     private readonly reportRepository: InvestigationReportRepository,
+    @Inject(EvidencePhotoCorruptionService)
+    private readonly evidencePhotoCorruptionService: EvidencePhotoCorruptionService,
     @Inject(IdentificationCodeService)
     private readonly identificationCodeService: IdentificationCodeService,
   ) {}
@@ -97,14 +103,30 @@ export class SubmitInvestigationReportUseCase {
       normalizedCode,
       caseItem.identificationCodeHash,
     );
+    const reportId = `report-${Date.now()}-${submissionCount + 1}`;
+    let displayPhotoUrl: string | null = null;
+
+    try {
+      displayPhotoUrl = await this.evidencePhotoCorruptionService.createDisplayVariant(
+        normalizedPhotoUrl,
+        reportId,
+      );
+    } catch (error) {
+      this.logger.warn(
+        `열람용 오염 사본 생성에 실패했습니다. 원본만 저장합니다. (${normalizedPhotoUrl}) ${
+          error instanceof Error ? error.message : "unknown error"
+        }`,
+      );
+    }
 
     const report = new InvestigationReport({
-      id: `report-${Date.now()}-${submissionCount + 1}`,
+      id: reportId,
       caseId: command.caseId,
       userId: command.userId,
       submittedCodeMask: this.identificationCodeService.mask(normalizedCode),
       normalizedCodeHash,
       photoUrl: normalizedPhotoUrl,
+      displayPhotoUrl,
       isCodeCorrect,
       reviewStatus: "pending",
       rejectionReason: null,
@@ -112,7 +134,12 @@ export class SubmitInvestigationReportUseCase {
       reviewedAt: null,
     });
 
-    await this.reportRepository.create(report);
+    try {
+      await this.reportRepository.create(report);
+    } catch (error) {
+      await this.evidencePhotoCorruptionService.removeDisplayVariant(displayPhotoUrl);
+      throw error;
+    }
 
     return {
       isCodeCorrect,

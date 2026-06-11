@@ -45,10 +45,16 @@ export class EvidencePhotoUrlService {
     return data.signedUrl;
   }
 
-  async mapReportSnapshot<T extends { photoUrl: string }>(snapshot: T) {
+  async mapReportSnapshot<T extends { photoUrl: string; displayPhotoUrl?: string | null }>(snapshot: T) {
+    const [photoUrl, displayPhotoUrl] = await Promise.all([
+      this.createSignedUrl(snapshot.photoUrl),
+      snapshot.displayPhotoUrl ? this.createSignedUrl(snapshot.displayPhotoUrl) : Promise.resolve(null),
+    ]);
+
     return {
       ...snapshot,
-      photoUrl: await this.createSignedUrl(snapshot.photoUrl),
+      photoUrl,
+      displayPhotoUrl,
     };
   }
 }
