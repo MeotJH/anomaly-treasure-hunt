@@ -131,15 +131,19 @@ export class InvestigationCase {
     Object.assign(this.props, next);
   }
 
-  isReportOpen(now: Date) {
-    return now >= this.props.startsAt && now <= this.props.endsAt;
+  isReportOpen() {
+    return this.props.status === "published";
   }
 
-  isResultOpen(now: Date) {
-    return now >= this.props.announcedAt || this.props.status === "announced";
+  isResultOpen() {
+    return this.props.status === "announced";
   }
 
   isVisible() {
     return this.props.status !== "draft";
+  }
+
+  isCurrentCase() {
+    return this.props.status === "published";
   }
 }

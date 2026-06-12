@@ -8,9 +8,9 @@ import { compareCaseListOrder } from "./case-list-order";
 export class InMemoryCaseRepository implements CaseRepository {
   private readonly cases = createSeedCases().map((seed) => new InvestigationCase(seed));
 
-  async findCurrent(now: Date) {
+  async findCurrent() {
     return (
-      this.cases.find((caseItem) => caseItem.isReportOpen(now) && caseItem.isVisible()) ??
+      this.cases.find((caseItem) => caseItem.isCurrentCase() && caseItem.isVisible()) ??
       null
     );
   }
