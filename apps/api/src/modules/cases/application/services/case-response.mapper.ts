@@ -16,9 +16,6 @@ export class CaseResponseMapper {
       accessLevel: caseItem.accessLevel,
       rewardName: caseItem.rewardName,
       summary: caseItem.summary,
-      startsAt: caseItem.startsAt.toISOString(),
-      endsAt: caseItem.endsAt.toISOString(),
-      announcedAt: caseItem.announcedAt.toISOString(),
     };
   }
 

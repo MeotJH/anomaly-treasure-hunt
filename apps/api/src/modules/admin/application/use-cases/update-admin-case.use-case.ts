@@ -3,6 +3,7 @@ import { CASE_REPOSITORY } from "../../../cases/cases.tokens";
 import { InvestigationCaseProps } from "../../../cases/domain/entities/case.entity";
 import { CaseRepository } from "../../../cases/domain/repositories/case.repository";
 import { IdentificationCodeService } from "../../../reports/application/services/identification-code.service";
+import { buildLegacyScheduleForStatus } from "./legacy-case-schedule";
 
 export type UpdateAdminCaseCommand = Partial<{
   title: string;
@@ -14,9 +15,6 @@ export type UpdateAdminCaseCommand = Partial<{
   summary: string;
   reportBody: string;
   safetyNotice: string;
-  startsAt: string;
-  endsAt: string;
-  announcedAt: string;
   answerLocation: string;
   identificationCode: string;
   completionMessage: string;
@@ -40,6 +38,9 @@ export class UpdateAdminCaseUseCase {
       throw new NotFoundException(`사건 문서 ${caseId}를 찾을 수 없습니다.`);
     }
 
+    const nextStatus = "status" in command && command.status ? command.status : caseItem.status;
+    const schedule = buildLegacyScheduleForStatus(nextStatus);
+
     return this.caseRepository.update(caseId, {
       ...("title" in command ? { title: command.title } : {}),
       ...("difficultyGrade" in command ? { difficultyGrade: command.difficultyGrade } : {}),
@@ -52,9 +53,9 @@ export class UpdateAdminCaseUseCase {
       ...("summary" in command ? { summary: command.summary } : {}),
       ...("reportBody" in command ? { reportBody: command.reportBody } : {}),
       ...("safetyNotice" in command ? { safetyNotice: command.safetyNotice } : {}),
-      ...("startsAt" in command ? { startsAt: new Date(command.startsAt!) } : {}),
-      ...("endsAt" in command ? { endsAt: new Date(command.endsAt!) } : {}),
-      ...("announcedAt" in command ? { announcedAt: new Date(command.announcedAt!) } : {}),
+      startsAt: schedule.startsAt,
+      endsAt: schedule.endsAt,
+      announcedAt: schedule.announcedAt,
       ...("answerLocation" in command ? { answerLocation: command.answerLocation } : {}),
       ...("identificationCode" in command
         ? {

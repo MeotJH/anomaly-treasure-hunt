@@ -32,9 +32,6 @@ interface AdminCaseFormState {
   summary: string;
   reportBody: string;
   safetyNotice: string;
-  startsAt: string;
-  endsAt: string;
-  announcedAt: string;
   answerLocation: string;
   identificationCode: string;
   completionMessage: string;
@@ -49,18 +46,7 @@ interface AdminCaseFormState {
   missionCaution: string;
 }
 
-function isoLocal(dateString: string) {
-  return dateString.slice(0, 16);
-}
-
-function isoInTwoDays() {
-  return new Date(Date.now() + 1000 * 60 * 60 * 24 * 2).toISOString();
-}
-
 function buildDefaultForm(): AdminCaseFormState {
-  const now = new Date().toISOString();
-  const inTwoDays = isoInTwoDays();
-
   return {
     fileNo: "",
     title: "",
@@ -72,9 +58,6 @@ function buildDefaultForm(): AdminCaseFormState {
     summary: "",
     reportBody: "",
     safetyNotice: "",
-    startsAt: isoLocal(now),
-    endsAt: isoLocal(inTwoDays),
-    announcedAt: isoLocal(inTwoDays),
     answerLocation: "",
     identificationCode: "",
     completionMessage: "",
@@ -104,9 +87,6 @@ function mapCaseToForm(caseItem: AdminCaseRecord): AdminCaseFormState {
     summary: caseItem.summary,
     reportBody: caseItem.reportBody,
     safetyNotice: caseItem.safetyNotice,
-    startsAt: isoLocal(caseItem.startsAt),
-    endsAt: isoLocal(caseItem.endsAt),
-    announcedAt: isoLocal(caseItem.announcedAt),
     answerLocation: caseItem.answerLocation,
     identificationCode: "",
     completionMessage: caseItem.completionMessage,
@@ -146,9 +126,6 @@ function buildPayload(form: AdminCaseFormState): AdminCasePayload {
     summary: form.summary.trim(),
     reportBody: form.reportBody.trim(),
     safetyNotice: form.safetyNotice.trim(),
-    startsAt: new Date(form.startsAt).toISOString(),
-    endsAt: new Date(form.endsAt).toISOString(),
-    announcedAt: new Date(form.announcedAt).toISOString(),
     answerLocation: form.answerLocation.trim(),
     identificationCode: form.identificationCode.trim(),
     completionMessage: form.completionMessage.trim(),
@@ -236,9 +213,9 @@ export function AdminCaseManager({
       onCasesChange(cases.map((caseItem) => (caseItem.id === updated.id ? updated : caseItem)));
       onSelectedCaseChange(updated.id);
       setForm(mapCaseToForm(updated));
-      setMessage(`${updated.fileNo} 문서를 저장했습니다.`);
+      setMessage(`${updated.fileNo} 문서를 수정했습니다.`);
     } catch (error) {
-      setMessage(error instanceof Error ? error.message : "문서 저장에 실패했습니다.");
+      setMessage(error instanceof Error ? error.message : "문서 수정에 실패했습니다.");
     }
   }
 
@@ -265,7 +242,7 @@ export function AdminCaseManager({
       <section className="rounded-3xl border border-rose-950/40 bg-[linear-gradient(180deg,rgba(24,11,14,0.94),rgba(10,11,15,0.92))] p-6">
         <div className="flex items-center justify-between gap-4">
           <div>
-            <p className="text-xs uppercase tracking-[0.28em] text-zinc-500">문서 통제 목록</p>
+            <p className="text-xs uppercase tracking-[0.28em] text-zinc-500">문서 제어 목록</p>
             <h3 className="mt-2 text-2xl font-semibold text-zinc-50">
               <span className="glitch-text" data-text="사건 문서 관리">
                 사건 문서 관리
@@ -330,9 +307,9 @@ export function AdminCaseManager({
         <h3 className="mt-2 text-2xl font-semibold text-zinc-50">
           <span
             className="glitch-text"
-            data-text={mode === "create" ? "초안 생성" : "문서 세부 조정"}
+            data-text={mode === "create" ? "초안 생성" : "문서 상태 조정"}
           >
-            {mode === "create" ? "초안 생성" : "문서 세부 조정"}
+            {mode === "create" ? "초안 생성" : "문서 상태 조정"}
           </span>
         </h3>
 
@@ -359,9 +336,17 @@ export function AdminCaseManager({
                 <option value="draft">초안</option>
                 <option value="published">공개 중</option>
                 <option value="closed">종료</option>
-                <option value="announced">발표됨</option>
+                <option value="announced">발표</option>
               </select>
             </label>
+          </div>
+
+          <div className="rounded-3xl border border-rose-400/14 bg-rose-500/8 p-5">
+            <p className="text-sm font-medium text-rose-100">상태 기반 사건 제어</p>
+            <p className="mt-2 text-sm leading-7 text-zinc-300">
+              제보 가능 여부와 결과 공개 여부는 날짜가 아니라 사건 상태로만 결정됩니다.
+              공개 중은 제보 가능, 종료는 제보 마감, 발표는 결과 공개 상태입니다.
+            </p>
           </div>
 
           <label className="block">
@@ -370,12 +355,12 @@ export function AdminCaseManager({
               value={form.title}
               onChange={(event) => updateForm("title", event.target.value)}
               className="w-full rounded-2xl border border-white/10 bg-black/20 px-4 py-3 text-zinc-50 placeholder:text-zinc-500"
-              placeholder="현상을 식별할 제목"
+              placeholder="이상현상 문서 제목"
             />
           </label>
 
           <label className="block">
-            <FieldLabel>대표사진 경로</FieldLabel>
+            <FieldLabel>대표 이미지 경로</FieldLabel>
             <input
               value={form.representativeImageUrl}
               onChange={(event) => updateForm("representativeImageUrl", event.target.value)}
@@ -389,7 +374,7 @@ export function AdminCaseManager({
 
           <div className="grid gap-4 md:grid-cols-3">
             <label className="block">
-              <FieldLabel>열람 등급</FieldLabel>
+              <FieldLabel>접근 등급</FieldLabel>
               <input
                 value={form.accessLevel}
                 onChange={(event) => updateForm("accessLevel", event.target.value)}
@@ -424,36 +409,6 @@ export function AdminCaseManager({
             </label>
           </div>
 
-          <div className="grid gap-4 md:grid-cols-3">
-            <label className="block">
-              <FieldLabel>시작 시각</FieldLabel>
-              <input
-                type="datetime-local"
-                value={form.startsAt}
-                onChange={(event) => updateForm("startsAt", event.target.value)}
-                className="w-full rounded-2xl border border-white/10 bg-black/20 px-4 py-3 text-zinc-50"
-              />
-            </label>
-            <label className="block">
-              <FieldLabel>종료 시각</FieldLabel>
-              <input
-                type="datetime-local"
-                value={form.endsAt}
-                onChange={(event) => updateForm("endsAt", event.target.value)}
-                className="w-full rounded-2xl border border-white/10 bg-black/20 px-4 py-3 text-zinc-50"
-              />
-            </label>
-            <label className="block">
-              <FieldLabel>발표 시각</FieldLabel>
-              <input
-                type="datetime-local"
-                value={form.announcedAt}
-                onChange={(event) => updateForm("announcedAt", event.target.value)}
-                className="w-full rounded-2xl border border-white/10 bg-black/20 px-4 py-3 text-zinc-50"
-              />
-            </label>
-          </div>
-
           <label className="block">
             <FieldLabel>문서 요약</FieldLabel>
             <textarea
@@ -477,9 +432,7 @@ export function AdminCaseManager({
           <div className="space-y-4 rounded-3xl border border-white/10 bg-black/20 p-5">
             <div>
               <p className="text-sm font-medium text-zinc-100">
-                <span className="glitch-text" data-text="단서 편집">
-                  단서 편집
-                </span>
+                <span className="glitch-text" data-text="단서 편집">단서 편집</span>
               </p>
               <p className="mt-1 text-xs text-zinc-500">최대 3개의 단서를 문서 본문과 분리해 관리합니다.</p>
             </div>
@@ -567,22 +520,13 @@ export function AdminCaseManager({
                 value={form.identificationCode}
                 onChange={(event) => updateForm("identificationCode", event.target.value)}
                 className="w-full rounded-2xl border border-white/10 bg-black/20 px-4 py-3 text-zinc-50 placeholder:text-zinc-500"
-                placeholder={
-                  mode === "edit" && selectedCase?.hasIdentificationCode
-                    ? "변경할 때만 새 코드를 입력"
-                    : "현장 식별 코드"
-                }
+                placeholder={mode === "edit" ? "변경할 때만 입력" : "현장 식별 코드"}
               />
-              {mode === "edit" && selectedCase?.hasIdentificationCode ? (
-                <p className="mt-2 text-xs text-zinc-500">
-                  기존 식별 코드는 서버에서만 보관됩니다. 비워두면 현재 코드가 유지됩니다.
-                </p>
-              ) : null}
             </label>
           </div>
 
           <label className="block">
-            <FieldLabel>조사 완료 문구</FieldLabel>
+            <FieldLabel>완료 메시지</FieldLabel>
             <textarea
               value={form.completionMessage}
               onChange={(event) => updateForm("completionMessage", event.target.value)}
@@ -594,23 +538,23 @@ export function AdminCaseManager({
           <div className="flex flex-wrap gap-3">
             <button
               type="submit"
-              className="distressed-button distressed-button-info px-5 py-2 text-sm"
+              className="distressed-button distressed-button-danger px-5 py-3 text-sm"
             >
-              {mode === "create" ? "초안 문서 생성" : "문서 저장"}
+              {mode === "create" ? "문서 생성" : "문서 저장"}
             </button>
             {mode === "create" && selectedCase ? (
               <button
                 type="button"
                 onClick={() => switchToEditMode(selectedCase.id)}
-                className="distressed-button distressed-button-neutral px-5 py-2 text-sm"
+                className="distressed-button distressed-button-neutral px-5 py-3 text-sm"
               >
-                기존 문서 편집으로 돌아가기
+                기존 문서로 돌아가기
               </button>
             ) : null}
           </div>
-        </form>
 
-        {message ? <p className="mt-4 text-sm text-zinc-300">{message}</p> : null}
+          {message ? <p className="text-sm text-zinc-300">{message}</p> : null}
+        </form>
       </section>
     </div>
   );

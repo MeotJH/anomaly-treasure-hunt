@@ -6,6 +6,7 @@ import {
 } from "../../../cases/domain/entities/case.entity";
 import { CaseRepository } from "../../../cases/domain/repositories/case.repository";
 import { IdentificationCodeService } from "../../../reports/application/services/identification-code.service";
+import { buildLegacyScheduleForStatus } from "./legacy-case-schedule";
 
 export interface CreateAdminCaseCommand {
   fileNo: string;
@@ -18,9 +19,6 @@ export interface CreateAdminCaseCommand {
   summary: string;
   reportBody: string;
   safetyNotice: string;
-  startsAt: string;
-  endsAt: string;
-  announcedAt: string;
   answerLocation: string;
   identificationCode: string;
   completionMessage: string;
@@ -39,6 +37,7 @@ export class CreateAdminCaseUseCase {
 
   async execute(command: CreateAdminCaseCommand) {
     const existingCases = await this.caseRepository.findAll();
+    const schedule = buildLegacyScheduleForStatus(command.status);
     const caseItem = new InvestigationCase({
       id: `case-${Date.now()}`,
       fileNo: command.fileNo,
@@ -52,9 +51,9 @@ export class CreateAdminCaseUseCase {
       summary: command.summary,
       reportBody: command.reportBody,
       safetyNotice: command.safetyNotice,
-      startsAt: new Date(command.startsAt),
-      endsAt: new Date(command.endsAt),
-      announcedAt: new Date(command.announcedAt),
+      startsAt: schedule.startsAt,
+      endsAt: schedule.endsAt,
+      announcedAt: schedule.announcedAt,
       answerLocation: command.answerLocation,
       identificationCodeHash: this.identificationCodeService.hash(command.identificationCode),
       completionMessage: command.completionMessage,
