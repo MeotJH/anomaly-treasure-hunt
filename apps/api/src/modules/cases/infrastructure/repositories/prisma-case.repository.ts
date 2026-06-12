@@ -12,6 +12,7 @@ import {
   serializeJson,
 } from "../../../shared/infrastructure/prisma-persistence.util";
 import { PrismaService } from "../../../shared/infrastructure/prisma.service";
+import { compareCaseListOrder } from "./case-list-order";
 
 type PrismaCaseRecord = Prisma.CaseGetPayload<Record<string, never>>;
 
@@ -36,7 +37,7 @@ export class PrismaCaseRepository implements CaseRepository {
       },
     });
 
-    return rows.map((row) => this.mapRow(row));
+    return rows.sort(compareCaseListOrder).map((row) => this.mapRow(row));
   }
 
   async findAll() {

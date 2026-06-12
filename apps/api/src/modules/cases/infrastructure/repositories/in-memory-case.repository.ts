@@ -2,6 +2,7 @@ import { Injectable } from "@nestjs/common";
 import { InvestigationCase } from "../../domain/entities/case.entity";
 import { CaseRepository } from "../../domain/repositories/case.repository";
 import { createSeedCases } from "../../../shared/infrastructure/sqlite-seed";
+import { compareCaseListOrder } from "./case-list-order";
 
 @Injectable()
 export class InMemoryCaseRepository implements CaseRepository {
@@ -15,7 +16,9 @@ export class InMemoryCaseRepository implements CaseRepository {
   }
 
   async findVisible() {
-    return this.cases.filter((caseItem) => caseItem.isVisible());
+    return this.cases
+      .filter((caseItem) => caseItem.isVisible())
+      .sort(compareCaseListOrder);
   }
 
   async findAll() {
