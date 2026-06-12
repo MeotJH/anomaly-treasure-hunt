@@ -1,8 +1,7 @@
+import { readJsonResponse } from "@/lib/api/read-json";
 import { getServerAuthorizationHeaders } from "@/lib/api/server-auth";
 import { appConfig } from "@/lib/config";
-import {
-  MyInvestigationReportSnapshot,
-} from "../domain/report";
+import { MyInvestigationReportSnapshot } from "../domain/report";
 
 async function readJson<T>(path: string, init?: RequestInit) {
   const response = await fetch(`${appConfig.apiBaseUrl}${path}`, {
@@ -10,12 +9,7 @@ async function readJson<T>(path: string, init?: RequestInit) {
     cache: "no-store",
   });
 
-  if (!response.ok) {
-    const message = await response.text();
-    throw new Error(message || `요청에 실패했습니다. 상태 코드: ${response.status}`);
-  }
-
-  return (await response.json()) as T;
+  return readJsonResponse<T>(response);
 }
 
 export async function fetchMyReports() {

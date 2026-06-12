@@ -1,5 +1,6 @@
 "use client";
 
+import { readJsonResponse } from "@/lib/api/read-json";
 import { getBrowserAuthorizationHeaders } from "@/lib/api/browser-auth";
 import { appConfig } from "@/lib/config";
 import { AdminCasePayload, AdminCaseRecord } from "../domain/case";
@@ -10,12 +11,7 @@ async function readJson<T>(path: string, init?: RequestInit) {
     cache: "no-store",
   });
 
-  if (!response.ok) {
-    const message = await response.text();
-    throw new Error(message || `요청에 실패했습니다. 상태 코드: ${response.status}`);
-  }
-
-  return (await response.json()) as T;
+  return readJsonResponse<T>(response);
 }
 
 export async function createAdminCase(payload: AdminCasePayload) {

@@ -1,5 +1,6 @@
 "use client";
 
+import { readJsonResponse } from "@/lib/api/read-json";
 import { getBrowserAuthorizationHeaders } from "@/lib/api/browser-auth";
 import { appConfig } from "@/lib/config";
 import { createSupabaseBrowserClient } from "@/lib/supabase/browser";
@@ -16,12 +17,7 @@ async function readJson<T>(path: string, init?: RequestInit) {
     cache: "no-store",
   });
 
-  if (!response.ok) {
-    const message = await response.text();
-    throw new Error(message || `요청에 실패했습니다. 상태 코드: ${response.status}`);
-  }
-
-  return (await response.json()) as T;
+  return readJsonResponse<T>(response);
 }
 
 function buildEvidencePath(caseId: string, file: File) {
@@ -32,7 +28,10 @@ function buildEvidencePath(caseId: string, file: File) {
   return `reports/${caseId}/${Date.now()}-${crypto.randomUUID()}.${extension || "jpg"}`;
 }
 
-export async function uploadEvidencePhoto(caseId: string, file: File): Promise<UploadedEvidencePhoto> {
+export async function uploadEvidencePhoto(
+  caseId: string,
+  file: File,
+): Promise<UploadedEvidencePhoto> {
   const supabase = createSupabaseBrowserClient();
   const path = buildEvidencePath(caseId, file);
   const bucket = supabaseConfig.storageBucket;
@@ -59,11 +58,14 @@ export async function removeEvidencePhoto(path: string) {
   const { error } = await supabase.storage.from(bucket).remove([path]);
 
   if (error) {
-    throw new Error(`업로드된 이미지 정리에 실패했습니다: ${error.message}`);
+    throw new Error(`업로드한 이미지 정리에 실패했습니다: ${error.message}`);
   }
 }
 
-export async function submitCaseReport(caseId: string, payload: { code: string; photoUrl: string }) {
+export async function submitCaseReport(
+  caseId: string,
+  payload: { code: string; photoUrl: string },
+) {
   const authHeaders = await getBrowserAuthorizationHeaders(true);
 
   return readJson<ReportSubmissionResult>(`/api/cases/${caseId}/report`, {

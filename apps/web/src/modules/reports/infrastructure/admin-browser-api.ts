@@ -1,5 +1,6 @@
 "use client";
 
+import { readJsonResponse } from "@/lib/api/read-json";
 import { getBrowserAuthorizationHeaders } from "@/lib/api/browser-auth";
 import { appConfig } from "@/lib/config";
 import { AdminWinnerRecord, InvestigationReportSnapshot } from "../domain/report";
@@ -10,20 +11,18 @@ async function readJson<T>(path: string, init?: RequestInit) {
     cache: "no-store",
   });
 
-  if (!response.ok) {
-    const message = await response.text();
-    throw new Error(message || `요청에 실패했습니다. 상태 코드: ${response.status}`);
-  }
-
-  return (await response.json()) as T;
+  return readJsonResponse<T>(response);
 }
 
 export async function fetchAdminReports(caseId: string) {
   const authHeaders = await getBrowserAuthorizationHeaders(true);
 
-  return readJson<InvestigationReportSnapshot[]>(`/api/admin/cases/${caseId}/reports`, {
-    headers: authHeaders,
-  });
+  return readJson<InvestigationReportSnapshot[]>(
+    `/api/admin/cases/${caseId}/reports`,
+    {
+      headers: authHeaders,
+    },
+  );
 }
 
 export async function reviewAdminReport(
@@ -32,17 +31,20 @@ export async function reviewAdminReport(
 ) {
   const authHeaders = await getBrowserAuthorizationHeaders(true);
 
-  return readJson<InvestigationReportSnapshot>(`/api/admin/reports/${reportId}/review`, {
-    method: "PATCH",
-    headers: {
-      "Content-Type": "application/json",
-      ...authHeaders,
+  return readJson<InvestigationReportSnapshot>(
+    `/api/admin/reports/${reportId}/review`,
+    {
+      method: "PATCH",
+      headers: {
+        "Content-Type": "application/json",
+        ...authHeaders,
+      },
+      body: JSON.stringify({
+        reviewStatus,
+        rejectionReason: reviewStatus === "rejected" ? "관리자 반려" : undefined,
+      }),
     },
-    body: JSON.stringify({
-      reviewStatus,
-      rejectionReason: reviewStatus === "rejected" ? "관리자 반려" : undefined,
-    }),
-  });
+  );
 }
 
 export async function drawWinner(caseId: string) {

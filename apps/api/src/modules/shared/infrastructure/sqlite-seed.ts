@@ -110,8 +110,8 @@ LUNG_AREA_001
       safetyNotice:
         "공개 산책로에서만 촬영하십시오. 나무가 주 피사체로 보이는 사진을 촬영하되, 타인의 얼굴과 개인정보가 크게 식별되지 않도록 주의하십시오. 출입금지 구역, 사유지, 공사장, 야간 저시인 환경, 관리용 통로 접근은 금지됩니다. 같은 나무나 같은 산책로를 반복해서 지나는 느낌이 들 경우 촬영을 중단하고 밝은 공개 동선으로 복귀하십시오.",
       startsAt: new Date("2026-06-09T12:41:29.151Z"),
-      endsAt: new Date("2026-06-11T12:41:29.151Z"),
-      announcedAt: new Date("2026-06-12T00:41:29.151Z"),
+      endsAt: new Date("9999-12-31T23:59:59.999Z"),
+      announcedAt: new Date("9999-12-31T23:59:59.999Z"),
       answerLocation: "서울숲",
       identificationCodeHash: hashCode("TREE"),
       completionMessage:

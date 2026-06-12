@@ -1,3 +1,4 @@
+import { readJsonResponse } from "@/lib/api/read-json";
 import { getServerAuthorizationHeaders } from "@/lib/api/server-auth";
 import { appConfig } from "@/lib/config";
 import {
@@ -7,22 +8,39 @@ import {
   CaseSummary,
 } from "../domain/case";
 
-async function readJson<T>(path: string, init?: RequestInit) {
+async function readJson<T>(
+  path: string,
+  init?: RequestInit,
+  options?: { allowEmpty?: boolean },
+) {
   const response = await fetch(`${appConfig.apiBaseUrl}${path}`, {
     ...init,
     cache: "no-store",
   });
 
-  if (!response.ok) {
-    const message = await response.text();
-    throw new Error(message || `요청에 실패했습니다. 상태 코드: ${response.status}`);
-  }
-
-  return (await response.json()) as T;
+  return readJsonResponse<T>(response, options);
 }
 
 export async function fetchCurrentCase() {
-  return readJson<CaseSummary | null>("/api/cases/current");
+  const caseItem = await readJson<CaseSummary | null | Record<string, never>>(
+    "/api/cases/current",
+    undefined,
+    { allowEmpty: true },
+  );
+
+  if (!caseItem) {
+    return null;
+  }
+
+  if (
+    typeof caseItem === "object" &&
+    !Array.isArray(caseItem) &&
+    Object.keys(caseItem).length === 0
+  ) {
+    return null;
+  }
+
+  return caseItem as CaseSummary;
 }
 
 export async function fetchCases() {
