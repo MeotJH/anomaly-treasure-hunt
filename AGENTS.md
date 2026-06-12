@@ -45,6 +45,12 @@
 - Case insert tone and field guide: [docs/case-insert-writing-guide.md](docs/case-insert-writing-guide.md)
 - When the user asks for a new case/problem, prefer returning a standalone SQL `INSERT` without modifying existing seed files unless the user explicitly asks for seed changes.
 
+## Work Intake
+- When a user request is large enough to be a single feature or policy change, create or update one `backlog/*.md` item before implementation unless the user explicitly asks to skip planning artifacts.
+- Break that work into small `feature/*` slices with one README per slice when the change spans multiple modules, state rules, or deployment steps.
+- Prefer naming feature branches with the `feature/` prefix and keeping each branch aligned to one feature slice.
+- Use the backlog item as the source of truth for scope, acceptance criteria, and edge cases while implementing.
+
 ## Role Map
 - PO: [agents/po/AGENTS.md](agents/po/AGENTS.md)
 - Designer: [agents/designer/AGENTS.md](agents/designer/AGENTS.md)
