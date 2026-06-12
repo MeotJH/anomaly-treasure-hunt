@@ -20,8 +20,8 @@ type PrismaCaseRecord = Prisma.CaseGetPayload<Record<string, never>>;
 export class PrismaCaseRepository implements CaseRepository {
   constructor(@Inject(PrismaService) private readonly prismaService: PrismaService) {}
 
-  async findCurrent(now: Date) {
-    const current = (await this.findVisible()).find((caseItem) => caseItem.isReportOpen(now));
+  async findCurrent() {
+    const current = (await this.findVisible()).find((caseItem) => caseItem.isCurrentCase());
     return current ?? null;
   }
 

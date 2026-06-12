@@ -25,8 +25,7 @@ export class CasesController {
 
   @Get("current")
   async getCurrentCase() {
-    const now = new Date();
-    const caseItem = await this.getCurrentCaseUseCase.execute(now);
+    const caseItem = await this.getCurrentCaseUseCase.execute();
 
     if (!caseItem) {
       return null;
@@ -43,13 +42,12 @@ export class CasesController {
 
   @Get(":caseId")
   async getCaseDetail(@Param("caseId") caseId: string, @Req() request: Request) {
-    const now = new Date();
     const caseItem = await this.getCaseDetailUseCase.execute(caseId);
     const user = await tryGetRequestUser(request);
     const userReports = user
       ? await this.reportRepository.findByCaseAndUser(caseId, user.id)
       : undefined;
 
-    return this.mapper.toDetail(caseItem, now, userReports);
+    return this.mapper.toDetail(caseItem, userReports);
   }
 }

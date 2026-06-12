@@ -26,8 +26,8 @@ export class DrawWinnerUseCase {
       throw new NotFoundException(`사건 문서 ${caseId}를 찾을 수 없습니다.`);
     }
 
-    if (caseItem.isReportOpen(new Date())) {
-      throw new BadRequestException("사건이 종료된 뒤에만 보상 대상을 선정할 수 있습니다.");
+    if (caseItem.isReportOpen()) {
+      throw new BadRequestException("사건이 공개 중일 때는 보상 대상을 확정할 수 없습니다.");
     }
 
     const existingWinner = await this.reportRepository.getWinnerByCaseId(caseId);
@@ -40,7 +40,7 @@ export class DrawWinnerUseCase {
     );
 
     if (approvedReports.length === 0) {
-      throw new BadRequestException("선정 가능한 승인 제보가 없습니다.");
+      throw new BadRequestException("추첨 가능한 승인 제보가 없습니다.");
     }
 
     const selected = approvedReports[Math.floor(Math.random() * approvedReports.length)];

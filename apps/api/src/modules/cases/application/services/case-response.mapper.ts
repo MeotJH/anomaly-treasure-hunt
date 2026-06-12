@@ -16,40 +16,33 @@ export class CaseResponseMapper {
       accessLevel: caseItem.accessLevel,
       rewardName: caseItem.rewardName,
       summary: caseItem.summary,
-      startsAt: caseItem.startsAt.toISOString(),
-      endsAt: caseItem.endsAt.toISOString(),
-      announcedAt: caseItem.announcedAt.toISOString(),
     };
   }
 
-  toDetail(
-    caseItem: InvestigationCase,
-    now: Date,
-    userReports?: InvestigationReport[],
-  ) {
+  toDetail(caseItem: InvestigationCase, userReports?: InvestigationReport[]) {
     const hasApprovedReport =
       userReports?.some((report) => report.reviewStatus === "approved") ?? false;
     const submissionCount = userReports?.length ?? 0;
     const remainingSubmissionCount = Math.max(0, 5 - submissionCount);
     const latestReport = userReports?.[0] ?? null;
 
-    const reportAvailability = !caseItem.isReportOpen(now)
+    const reportAvailability = !caseItem.isReportOpen()
       ? {
-          state: "closed",
-          message: "이 사건은 현재 제보 기간이 아닙니다.",
+          state: "closed" as const,
+          message: "이 사건은 현재 제보를 받고 있지 않습니다.",
         }
       : hasApprovedReport
         ? {
-            state: "approved_locked",
+            state: "approved_locked" as const,
             message: "이미 승인된 제보가 있어 추가 제출이 잠겨 있습니다.",
           }
         : remainingSubmissionCount === 0
           ? {
-              state: "limit_reached",
+              state: "limit_reached" as const,
               message: "이 사건에 허용된 5회 제출을 모두 사용했습니다.",
             }
           : {
-              state: "open",
+              state: "open" as const,
               message: "현장 식별 코드와 증거 사진을 제출할 수 있습니다.",
             };
 

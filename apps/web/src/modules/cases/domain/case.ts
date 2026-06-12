@@ -9,9 +9,6 @@ export interface CaseSummary {
   accessLevel: string;
   rewardName: string;
   summary: string;
-  startsAt: string;
-  endsAt: string;
-  announcedAt: string;
 }
 
 export interface CaseClue {
@@ -37,9 +34,6 @@ export interface AdminCasePayload {
   summary: string;
   reportBody: string;
   safetyNotice: string;
-  startsAt: string;
-  endsAt: string;
-  announcedAt: string;
   answerLocation: string;
   identificationCode: string;
   completionMessage: string;
@@ -80,6 +74,9 @@ export interface CaseResult {
 }
 
 export interface AdminCaseRecord extends CaseSummary {
+  startsAt: string;
+  endsAt: string;
+  announcedAt: string;
   reportBody: string;
   safetyNotice: string;
   answerLocation: string;

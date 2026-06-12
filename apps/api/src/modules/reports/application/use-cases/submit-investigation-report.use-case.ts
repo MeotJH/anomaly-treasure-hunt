@@ -46,24 +46,24 @@ export class SubmitInvestigationReportUseCase {
   ) {}
 
   async execute(command: SubmitReportCommand) {
-    const now = new Date();
     const caseItem = await this.caseRepository.findById(command.caseId);
 
     if (!caseItem) {
       throw new NotFoundException(`사건 문서 ${command.caseId}를 찾을 수 없습니다.`);
     }
 
-    if (!caseItem.isReportOpen(now)) {
+    if (!caseItem.isReportOpen()) {
       throw new BadRequestException("이 사건은 현재 제보를 받고 있지 않습니다.");
     }
 
+    const now = new Date();
     const approvedReport = await this.reportRepository.findApprovedByCaseAndUser(
       command.caseId,
       command.userId,
     );
 
     if (approvedReport) {
-      throw new ConflictException("이미 확인된 제보가 있어 추가 제출할 수 없습니다.");
+      throw new ConflictException("이미 승인된 제보가 있어 추가 제출할 수 없습니다.");
     }
 
     const submissionCount = await this.reportRepository.countByCaseAndUser(
@@ -113,7 +113,7 @@ export class SubmitInvestigationReportUseCase {
       );
     } catch (error) {
       this.logger.warn(
-        `열람용 오염 사본 생성에 실패했습니다. 원본만 저장합니다. (${normalizedPhotoUrl}) ${
+        `열람용 사본 생성에 실패했습니다. 원본만 사용합니다. (${normalizedPhotoUrl}) ${
           error instanceof Error ? error.message : "unknown error"
         }`,
       );

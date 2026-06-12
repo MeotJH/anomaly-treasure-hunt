@@ -9,8 +9,7 @@ export class GetCurrentCaseUseCase {
     private readonly caseRepository: CaseRepository,
   ) {}
 
-  execute(now: Date) {
-    return this.caseRepository.findCurrent(now);
+  execute() {
+    return this.caseRepository.findCurrent();
   }
 }
-

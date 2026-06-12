@@ -18,7 +18,6 @@ export class ListMyReportsUseCase {
 
   async execute(userId: string) {
     const reports = await this.reportRepository.findByUserId(userId);
-    const now = new Date();
 
     return Promise.all(
       reports.map(async (report) => {
@@ -28,9 +27,9 @@ export class ListMyReportsUseCase {
         return this.evidencePhotoUrlService.mapReportSnapshot({
           ...snapshot,
           caseFileNo: caseItem?.fileNo ?? report.caseId,
-          caseTitle: caseItem?.title ?? "삭제되었거나 연결 불가한 사건",
+          caseTitle: caseItem?.title ?? "삭제됐거나 연결 불가한 사건",
           caseStatus: caseItem?.status ?? "closed",
-          resultOpen: caseItem ? caseItem.isResultOpen(now) : false,
+          resultOpen: caseItem ? caseItem.isResultOpen() : false,
         });
       }),
     );

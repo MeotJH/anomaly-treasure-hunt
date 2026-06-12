@@ -2,7 +2,6 @@ import { Type } from "class-transformer";
 import {
   ArrayMinSize,
   IsArray,
-  IsDateString,
   IsIn,
   IsNotEmpty,
   IsNumber,
@@ -77,15 +76,6 @@ export class CreateAdminCaseDto {
   @IsString()
   @IsNotEmpty()
   safetyNotice!: string;
-
-  @IsDateString()
-  startsAt!: string;
-
-  @IsDateString()
-  endsAt!: string;
-
-  @IsDateString()
-  announcedAt!: string;
 
   @IsString()
   @IsNotEmpty()

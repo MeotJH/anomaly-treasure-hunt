@@ -1,7 +1,6 @@
 import { Type } from "class-transformer";
 import {
   IsArray,
-  IsDateString,
   IsIn,
   IsNumber,
   IsOptional,
@@ -68,18 +67,6 @@ export class UpdateAdminCaseDto {
   @IsOptional()
   @IsString()
   safetyNotice?: string;
-
-  @IsOptional()
-  @IsDateString()
-  startsAt?: string;
-
-  @IsOptional()
-  @IsDateString()
-  endsAt?: string;
-
-  @IsOptional()
-  @IsDateString()
-  announcedAt?: string;
 
   @IsOptional()
   @IsString()
