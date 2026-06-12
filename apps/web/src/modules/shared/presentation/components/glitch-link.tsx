@@ -11,6 +11,7 @@ import {
   useState,
 } from "react";
 import { emitArchiveGlitch } from "./archive-title";
+import { useInteractionLock } from "./interaction-lock-context";
 
 const NAVIGATION_GLITCH_DELAY_MS = 500;
 const NAVIGATION_GLITCH_REPEAT_MS = 650;
@@ -18,11 +19,19 @@ const NAVIGATION_GLITCH_REPEAT_MS = 650;
 type GlitchLinkProps = PropsWithChildren<{
   className?: string;
   href: string;
+  allowWhileLocked?: boolean;
 }>;
 
-export function GlitchLink({ children, className, href, ...props }: GlitchLinkProps) {
+export function GlitchLink({
+  children,
+  className,
+  href,
+  allowWhileLocked = false,
+  ...props
+}: GlitchLinkProps) {
   const router = useRouter();
   const pathname = usePathname();
+  const { isLocked } = useInteractionLock();
   const [isPending, setIsPending] = useState(false);
   const timeoutRef = useRef<number | null>(null);
   const intervalRef = useRef<number | null>(null);
@@ -64,7 +73,7 @@ export function GlitchLink({ children, className, href, ...props }: GlitchLinkPr
 
     event.preventDefault();
 
-    if (isPending || pathname === href) {
+    if ((isLocked && !allowWhileLocked) || isPending || pathname === href) {
       return;
     }
 
@@ -93,8 +102,10 @@ export function GlitchLink({ children, className, href, ...props }: GlitchLinkPr
       {...props}
       href={href}
       onClick={handleClick}
-      aria-disabled={isPending}
-      className={`${className ?? ""} ${isPending ? "is-glitch-pending" : ""}`.trim()}
+      aria-disabled={isPending || (isLocked && !allowWhileLocked)}
+      className={`${className ?? ""} ${isPending ? "is-glitch-pending" : ""} ${
+        isLocked && !allowWhileLocked ? "pointer-events-none opacity-45 saturate-50" : ""
+      }`.trim()}
     >
       {children}
     </Link>
