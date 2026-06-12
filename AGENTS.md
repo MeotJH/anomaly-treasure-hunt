@@ -50,6 +50,7 @@
 - Break that work into small `feature/*` slices with one README per slice when the change spans multiple modules, state rules, or deployment steps.
 - Prefer naming feature branches with the `feature/` prefix and keeping each branch aligned to one feature slice.
 - Use the backlog item as the source of truth for scope, acceptance criteria, and edge cases while implementing.
+- When merging a `feature/*` branch back into `master`, prefer a `squash merge` so release history stays compact unless the user explicitly asks to preserve the full branch history.
 
 ## Role Map
 - PO: [agents/po/AGENTS.md](agents/po/AGENTS.md)
